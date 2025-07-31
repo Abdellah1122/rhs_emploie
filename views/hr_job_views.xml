@@ -562,6 +562,7 @@
               <div name="kanban_boxes" class="row flex-nowrap" groups="hr_recruitment.group_hr_recruitment_user"></div>
             </div>
 
+            <!-- Original footer with Published and Job Page -->
             <div style="border-top: 1px solid #f3f4f6; padding: 12px 20px; background: #fefefe; display: flex; justify-content: space-between; align-items: center;">
               <div style="display: flex; align-items: center; gap: 8px;">
                 <field name="active" widget="boolean_toggle" nolabel="1"/>
@@ -576,7 +577,7 @@
                 </a>
                 <span t-if="!record.active.raw_value" 
                       style="color: #9ca3af; font-size: 0.875rem; font-weight: 500;">
-                  <i class="fa fa-external-link" style="margin-right: 4px; color:red;"></i>Job Page
+                  <i class="fa fa-external-link" style="margin-right: 4px;"></i>Job Page
                 </span>
               </div>
             </div>
