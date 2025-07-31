@@ -310,6 +310,56 @@
         <field name="type_contrat"/>
       </xpath>
 
+      <!-- Add the original kanban-menu template -->
+      <xpath expr="//templates" position="inside">
+        <t t-name="kanban-menu" groups="hr_recruitment.group_hr_recruitment_user">
+          <div class="container">
+            <div class="row">
+              <div class="col-6 o_kanban_card_manage_section">
+                <h5 role="menuitem" class="o_kanban_card_manage_title">
+                  <span>View</span>
+                </h5>
+                <div role="menuitem" name="menu_view_applications">
+                  <a name="%(hr_recruitment.action_hr_job_applications)d" type="action">Applications</a>
+                </div>
+                <div role="menuitem">
+                  <a name="action_open_activities" type="object">Activities</a>
+                </div>
+                <div role="menuitem">
+                  <a name="%(hr_recruitment.action_hr_job_sources)d" type="action" context="{'default_job_id': id}">Trackers</a>
+                </div>
+              </div>
+              <div class="col-6 o_kanban_card_manage_section">
+                <h5 role="menuitem" class="o_kanban_card_manage_title">
+                  <span>New</span>
+                </h5>
+                <div role="menuitem" name="menu_new_applications">
+                  <a name="%(hr_recruitment.action_hr_applicant_new)d" type="action">Application</a>
+                </div>
+              </div>
+              <div class="col-6 o_kanban_card_manage_section">
+                <h5 role="menuitem" class="o_kanban_card_manage_title">
+                  <span>Reporting</span>
+                </h5>
+                <div role="menuitem" name="o_kanban_job_reporting">
+                  <a name="%(hr_recruitment.action_hr_recruitment_report_filtered_job)d" type="action">Analysis</a>
+                </div>
+              </div>
+            </div>
+            <div class="o_kanban_card_manage_settings row">
+              <div class="col-6" role="menuitem" aria-haspopup="true">
+                <ul class="oe_kanban_colorpicker" data-field="color" role="popup"/>
+              </div>
+              <div class="col-6" role="menuitem">
+                <a class="dropdown-item" t-if="widget.editable" name="edit_job" type="edit">Configuration</a>
+                <a class="dropdown-item" t-if="record.active.raw_value" name="toggle_active" type="object">Archive</a>
+                <a class="dropdown-item" t-if="!record.active.raw_value" name="toggle_active" type="object">Unarchive</a>
+              </div>
+            </div>
+          </div>
+        </t>
+      </xpath>
+
       <!-- Clean minimalist kanban card template with all original functionality -->
       <xpath expr="//t[@t-name='kanban-box']" position="replace">
         <t t-name="kanban-box">
@@ -336,7 +386,7 @@
                                           status_value == 'cloture' ? '#6b7280' : 
                                           status_value == 'annule' ? '#991b1b' : '#dc2626'};"></div>
 
-            <!-- Original kanban card header -->
+            <!-- Original kanban card header with modern styling -->
             <div class="o_kanban_card_header d-flex align-items-baseline gap-1" style="padding: 20px 20px 12px;">
               <field name="is_favorite" widget="boolean_favorite" nolabel="1" 
                      style="color: #dc2626; font-size: 1.1rem;"/>
@@ -349,10 +399,11 @@
                              line-height: 1.4;
                              margin: 0;
                              letter-spacing: -0.025em;">
-                    <t t-esc="record.name.value"/>
-                    <span t-if="record.activity_domain.value" 
-                          style="color: #6b7280; font-weight: 400; font-size: 1rem;">
-                      / <t t-esc="record.activity_domain.value"/>
+                    <span><t t-esc="record.name.value"/>
+                      <span t-if="record.activity_domain.value" 
+                            style="color: #6b7280; font-weight: 400; font-size: 1rem;">
+                        / <t t-esc="record.activity_domain.value"/>
+                      </span>
                     </span>
                   </h3>
                 </div>
@@ -360,10 +411,10 @@
                   <field name="user_id"/>
                 </div>
                 <div class="o_secondary" groups="base.group_multi_company" style="margin-top: 2px;">
-                  <small><i class="fa fa-building-o"></i> <field name="company_id"/></small>
+                  <small><i class="fa fa-building-o" role="img" aria-label="Company" title="Company"></i> <field name="company_id"/></small>
                 </div>
                 <div t-if="record.alias_email.value" class="o_secondary o_job_alias" style="margin-top: 2px;">
-                  <small><i class="fa fa-envelope-o"></i> <field name="alias_id"/></small>
+                  <small><i class="fa fa-envelope-o" role="img" aria-label="Alias" title="Alias"></i> <field name="alias_id"/></small>
                 </div>
               </div>
 
@@ -463,7 +514,7 @@
             </div>
 
             <!-- Original recruitment job container with modern styling -->
-            <div class="container o_recruitment_job_container o_kanban_card_content" style="padding: 0 20px 16px;">
+            <div class="container o_recruitment_job_container o_kanban_card_content mt-0 mt-sm-3" style="padding: 0 20px 16px;">
               <div class="row">
                 <div class="col-7">
                   <button class="btn btn-primary" 
