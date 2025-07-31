@@ -270,6 +270,11 @@
       <!-- Enhanced kanban attributes -->
       <xpath expr="//kanban" position="attributes">
         <attribute name="class">o_kanban_dashboard o_hr_recruitment_kanban minimalist_modern_kanban</attribute>
+        <attribute name="on_create">hr_recruitment.create_job_simple</attribute>
+        <attribute name="sample">1</attribute>
+        <attribute name="limit">40</attribute>
+        <attribute name="action">%(hr_recruitment.action_hr_job_applications)d</attribute>
+        <attribute name="type">action</attribute>
       </xpath>
 
       <!-- Add all required fields -->
@@ -305,7 +310,7 @@
         <field name="type_contrat"/>
       </xpath>
 
-      <!-- Clean minimalist kanban card template -->
+      <!-- Clean minimalist kanban card template with all original functionality -->
       <xpath expr="//t[@t-name='kanban-box']" position="replace">
         <t t-name="kanban-box">
           <div t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''} minimalist-card"
@@ -331,211 +336,192 @@
                                           status_value == 'cloture' ? '#6b7280' : 
                                           status_value == 'annule' ? '#991b1b' : '#dc2626'};"></div>
 
-            <!-- Card content -->
-            <div style="padding: 20px;">
-
-              <!-- Header with favorite and urgency -->
-              <div class="d-flex justify-content-between align-items-start mb-3">
-                <field name="is_favorite" widget="boolean_favorite" nolabel="1" 
-                       style="color: #dc2626; font-size: 1.1rem;"/>
-                
-                <t t-set="days_remaining" t-value="record.nbr_jours_restants and record.nbr_jours_restants.raw_value"/>
-                <div t-if="days_remaining !== undefined" 
-                     t-attf-class="urgency-pill #{days_remaining &lt; 0 ? 'overdue' : days_remaining &lt;= 7 ? 'urgent' : 'normal'}"
-                     t-attf-style="padding: 4px 10px;
-                                   border-radius: 12px;
-                                   font-size: 0.7rem;
-                                   font-weight: 600;
-                                   background: #{days_remaining &lt; 0 ? '#fee2e2' : days_remaining &lt;= 7 ? '#fef3c7' : '#fef7f7'};
-                                   color: #{days_remaining &lt; 0 ? '#dc2626' : days_remaining &lt;= 7 ? '#d97706' : '#dc2626'};
-                                   border: 1px solid #{days_remaining &lt; 0 ? '#fecaca' : days_remaining &lt;= 7 ? '#fed7aa' : '#fecaca'};">
-                  <t t-esc="record.nbr_jours_restants.value"/>j
+            <!-- Original kanban card header -->
+            <div class="o_kanban_card_header d-flex align-items-baseline gap-1" style="padding: 20px 20px 12px;">
+              <field name="is_favorite" widget="boolean_favorite" nolabel="1" 
+                     style="color: #dc2626; font-size: 1.1rem;"/>
+              
+              <div class="o_kanban_card_header_title" style="flex: 1;">
+                <div class="o_primary">
+                  <h3 style="color: #111827;
+                             font-weight: 600;
+                             font-size: 1.15rem;
+                             line-height: 1.4;
+                             margin: 0;
+                             letter-spacing: -0.025em;">
+                    <t t-esc="record.name.value"/>
+                    <span t-if="record.activity_domain.value" 
+                          style="color: #6b7280; font-weight: 400; font-size: 1rem;">
+                      / <t t-esc="record.activity_domain.value"/>
+                    </span>
+                  </h3>
+                </div>
+                <div class="text-muted" style="margin-top: 4px;">
+                  <field name="user_id"/>
+                </div>
+                <div class="o_secondary" groups="base.group_multi_company" style="margin-top: 2px;">
+                  <small><i class="fa fa-building-o"></i> <field name="company_id"/></small>
+                </div>
+                <div t-if="record.alias_email.value" class="o_secondary o_job_alias" style="margin-top: 2px;">
+                  <small><i class="fa fa-envelope-o"></i> <field name="alias_id"/></small>
                 </div>
               </div>
 
-              <!-- Job title with domain -->
-              <div class="mb-3">
-                <h3 style="color: #111827;
-                           font-weight: 600;
-                           font-size: 1.15rem;
-                           line-height: 1.4;
-                           margin: 0;
-                           letter-spacing: -0.025em;">
-                  <field name="name"/>
-                  <span t-if="record.activity_domain.value" 
-                        style="color: #6b7280; font-weight: 400; font-size: 1rem;">
-                    / <t t-esc="record.activity_domain.value"/>
-                  </span>
-                </h3>
+              <!-- Urgency indicator -->
+              <t t-set="days_remaining" t-value="record.nbr_jours_restants and record.nbr_jours_restants.raw_value"/>
+              <div t-if="days_remaining !== undefined" 
+                   t-attf-class="urgency-pill #{days_remaining &lt; 0 ? 'overdue' : days_remaining &lt;= 7 ? 'urgent' : 'normal'}"
+                   t-attf-style="padding: 4px 10px;
+                                 border-radius: 12px;
+                                 font-size: 0.7rem;
+                                 font-weight: 600;
+                                 background: #{days_remaining &lt; 0 ? '#fee2e2' : days_remaining &lt;= 7 ? '#fef3c7' : '#fef7f7'};
+                                 color: #{days_remaining &lt; 0 ? '#dc2626' : days_remaining &lt;= 7 ? '#d97706' : '#dc2626'};
+                                 border: 1px solid #{days_remaining &lt; 0 ? '#fecaca' : days_remaining &lt;= 7 ? '#fed7aa' : '#fecaca'};">
+                <t t-esc="record.nbr_jours_restants.value"/>j
               </div>
+            </div>
 
-              <!-- Status badge -->
-              <div class="mb-3">
-                <span t-attf-style="display: inline-flex;
-                                   align-items: center;
-                                   gap: 6px;
-                                   padding: 5px 12px;
-                                   border-radius: 16px;
-                                   font-size: 0.7rem;
-                                   font-weight: 500;
-                                   background: #{status_value == 'ouvert' ? '#fef2f2' : 
-                                               status_value == 'en_cours' ? '#fff7ed' : 
-                                               status_value == 'cloture' ? '#f9fafb' : 
-                                               status_value == 'annule' ? '#fef1f1' : '#fef2f2'};
-                                   color: #{status_value == 'ouvert' ? '#dc2626' : 
-                                           status_value == 'en_cours' ? '#ea580c' : 
-                                           status_value == 'cloture' ? '#6b7280' : 
-                                           status_value == 'annule' ? '#991b1b' : '#dc2626'};
-                                   border: 1px solid #{status_value == 'ouvert' ? '#fecaca' : 
-                                                      status_value == 'en_cours' ? '#fed7aa' : 
-                                                      status_value == 'cloture' ? '#e5e7eb' : 
-                                                      status_value == 'annule' ? '#fca5a5' : '#fecaca'};">
-                  <div t-attf-style="width: 5px;
-                                     height: 5px;
-                                     border-radius: 50%;
-                                     background: #{status_value == 'ouvert' ? '#dc2626' : 
-                                                 status_value == 'en_cours' ? '#ea580c' : 
-                                                 status_value == 'cloture' ? '#6b7280' : 
-                                                 status_value == 'annule' ? '#991b1b' : '#dc2626'};"></div>
-                  <t t-esc="record.status and record.status.value or 'N/A'"/>
-                </span>
-              </div>
+            <!-- Status badge -->
+            <div style="padding: 0 20px 12px;">
+              <span t-attf-style="display: inline-flex;
+                                 align-items: center;
+                                 gap: 6px;
+                                 padding: 5px 12px;
+                                 border-radius: 16px;
+                                 font-size: 0.7rem;
+                                 font-weight: 500;
+                                 background: #{status_value == 'ouvert' ? '#fef2f2' : 
+                                             status_value == 'en_cours' ? '#fff7ed' : 
+                                             status_value == 'cloture' ? '#f9fafb' : 
+                                             status_value == 'annule' ? '#fef1f1' : '#fef2f2'};
+                                 color: #{status_value == 'ouvert' ? '#dc2626' : 
+                                         status_value == 'en_cours' ? '#ea580c' : 
+                                         status_value == 'cloture' ? '#6b7280' : 
+                                         status_value == 'annule' ? '#991b1b' : '#dc2626'};
+                                 border: 1px solid #{status_value == 'ouvert' ? '#fecaca' : 
+                                                    status_value == 'en_cours' ? '#fed7aa' : 
+                                                    status_value == 'cloture' ? '#e5e7eb' : 
+                                                    status_value == 'annule' ? '#fca5a5' : '#fecaca'};">
+                <div t-attf-style="width: 5px;
+                                   height: 5px;
+                                   border-radius: 50%;
+                                   background: #{status_value == 'ouvert' ? '#dc2626' : 
+                                               status_value == 'en_cours' ? '#ea580c' : 
+                                               status_value == 'cloture' ? '#6b7280' : 
+                                               status_value == 'annule' ? '#991b1b' : '#dc2626'};"></div>
+                <t t-esc="record.status and record.status.value or 'N/A'"/>
+              </span>
+            </div>
 
-              <!-- Clean info grid -->
+            <!-- Info grid -->
+            <div style="padding: 0 20px 16px;">
               <div style="display: grid; 
                           grid-template-columns: 1fr 1fr; 
-                          gap: 12px 16px; 
-                          margin-bottom: 20px;">
+                          gap: 8px 16px;">
                 
                 <!-- Request Date -->
                 <div>
-                  <div style="color: #6b7280; font-size: 0.7rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">
+                  <div style="color: #6b7280; font-size: 0.65rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;">
                     Date demande
                   </div>
-                  <div style="color: #111827; font-size: 0.8rem; font-weight: 500;">
+                  <div style="color: #111827; font-size: 0.75rem; font-weight: 500;">
                     <t t-esc="record.request_date and record.request_date.value or '-'"/>
                   </div>
                 </div>
 
                 <!-- Deadline -->
                 <div>
-                  <div style="color: #dc2626; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">
+                  <div style="color: #dc2626; font-size: 0.65rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;">
                     Échéance
                   </div>
-                  <div style="color: #dc2626; font-size: 0.8rem; font-weight: 600;">
+                  <div style="color: #dc2626; font-size: 0.75rem; font-weight: 600;">
                     <t t-esc="record.deadline_date and record.deadline_date.value or '-'"/>
                   </div>
                 </div>
 
                 <!-- Experience -->
                 <div>
-                  <div style="color: #6b7280; font-size: 0.7rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">
+                  <div style="color: #6b7280; font-size: 0.65rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;">
                     Expérience
                   </div>
-                  <div style="color: #111827; font-size: 0.8rem; font-weight: 500;">
+                  <div style="color: #111827; font-size: 0.75rem; font-weight: 500;">
                     <t t-esc="record.experience and record.experience.value or '-'"/>
                   </div>
                 </div>
 
                 <!-- City -->
                 <div>
-                  <div style="color: #6b7280; font-size: 0.7rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">
+                  <div style="color: #6b7280; font-size: 0.65rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;">
                     Ville
                   </div>
-                  <div style="color: #111827; font-size: 0.8rem; font-weight: 500;">
+                  <div style="color: #111827; font-size: 0.75rem; font-weight: 500;">
                     <t t-esc="record.city and record.city.value or '-'"/>
                   </div>
                 </div>
-
-                <!-- Language -->
-                <div>
-                  <div style="color: #6b7280; font-size: 0.7rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">
-                    Langue
-                  </div>
-                  <div style="color: #111827; font-size: 0.8rem; font-weight: 500;">
-                    <t t-esc="record.language and record.language.value or '-'"/>
-                  </div>
-                </div>
-
-                <!-- Contract -->
-                <div>
-                  <div style="color: #6b7280; font-size: 0.7rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">
-                    Contrat
-                  </div>
-                  <div style="color: #111827; font-size: 0.8rem; font-weight: 500;">
-                    <t t-esc="record.type_contrat and record.type_contrat.value or '-'"/>
-                  </div>
-                </div>
               </div>
+            </div>
 
-              <!-- User info -->
-              <div class="d-flex align-items-center mb-3" style="padding: 10px; background: #fefefe; border-radius: 12px; border: 1px solid #f9fafb;">
-                <div style="width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, #fef2f2, #fee2e2); display: flex; align-items: center; justify-content: center; margin-right: 10px; border: 1px solid #fecaca;">
-                  <i class="fa fa-user" style="color: #dc2626; font-size: 0.75rem;"></i>
+            <!-- Original recruitment job container with modern styling -->
+            <div class="container o_recruitment_job_container o_kanban_card_content" style="padding: 0 20px 16px;">
+              <div class="row">
+                <div class="col-7">
+                  <button class="btn btn-primary" 
+                          name="%(hr_recruitment.action_hr_job_applications)d" 
+                          type="action"
+                          style="background: linear-gradient(135deg, #dc2626, #b91c1c);
+                                 border: none;
+                                 border-radius: 12px;
+                                 padding: 8px 14px;
+                                 font-size: 0.75rem;
+                                 font-weight: 500;
+                                 transition: all 0.2s ease;
+                                 box-shadow: 0 2px 4px rgba(220, 38, 38, 0.2);">
+                    <field name="new_application_count"/> New Applications
+                  </button>
                 </div>
-                <div>
-                  <div style="color: #111827; font-size: 0.8rem; font-weight: 500;">
-                    <field name="user_id"/>
-                  </div>
-                  <div style="color: #6b7280; font-size: 0.7rem;">Responsable</div>
-                </div>
-              </div>
-
-              <!-- Email alias (if exists) -->
-              <div t-if="record.alias_email.value" class="mb-3" 
-                   style="padding: 10px; background: #eff6ff; border-radius: 12px; border: 1px solid #dbeafe;">
-                <div style="display: flex; align-items: center; gap: 8px;">
-                  <i class="fa fa-envelope-o" style="color: #2563eb; font-size: 0.75rem;"></i>
-                  <div style="color: #2563eb; font-size: 0.8rem; font-weight: 500;">
-                    <field name="alias_id"/>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Actions and stats -->
-              <div class="d-flex justify-content-between align-items-center">
-                <!-- Main action button -->
-                <button class="btn btn-primary" 
-                        name="%(hr_recruitment.action_hr_job_applications)d" 
-                        type="action"
-                        style="background: linear-gradient(135deg, #dc2626, #b91c1c);
-                               border: none;
-                               border-radius: 12px;
-                               padding: 10px 16px;
-                               font-size: 0.8rem;
-                               font-weight: 500;
-                               transition: all 0.2s ease;
-                               box-shadow: 0 2px 4px rgba(220, 38, 38, 0.2);">
-                  <field name="new_application_count"/> Nouvelles
-                </button>
-
-                <!-- Statistics -->
-                <div style="text-align: center;">
-                  <div style="color: #dc2626; font-weight: 700; font-size: 1.1rem; line-height: 1;">
-                    <field name="no_of_recruitment"/>
-                  </div>
-                  <div style="color: #6b7280; font-size: 0.55rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;">
-                    À RECRUTER
-                  </div>
-                </div>
-              </div>
-
-              <!-- Activities alert (if any) -->
-              <div t-if="record.activities_today.raw_value > 0 or record.activities_overdue.raw_value > 0" 
-                   style="margin-top: 12px; padding: 10px; background: #fef3c7; border-radius: 12px; border: 1px solid #fed7aa;">
-                <div style="display: flex; align-items: center; gap: 8px;">
-                  <i class="fa fa-exclamation-triangle" style="color: #d97706; font-size: 0.75rem;"></i>
-                  <div style="color: #d97706; font-size: 0.8rem; font-weight: 500;">
-                    <span t-if="record.activities_today.raw_value > 0">
-                      <field name="activities_today"/> aujourd'hui
+                
+                <ul class="col-5 o_job_activities" style="list-style: none; padding: 0; margin: 0; font-size: 0.75rem;">
+                  <li style="margin-bottom: 2px;">
+                    <a name="edit_job" type="edit" 
+                       t-attf-class="{{ record.no_of_recruitment.raw_value > 0 ? 'text-primary fw-bolder' : 'text-secondary' }}" 
+                       groups="hr_recruitment.group_hr_recruitment_user">
+                      <field name="no_of_recruitment"/> To Recruit
+                    </a>
+                    <span t-attf-class="{{ record.no_of_recruitment.raw_value > 0 ? 'text-primary fw-bolder' : 'text-secondary' }}" 
+                          groups="!hr_recruitment.group_hr_recruitment_user">
+                      <field name="no_of_recruitment"/> To Recruit
                     </span>
-                    <span t-if="record.activities_overdue.raw_value > 0">
-                      <field name="activities_overdue"/> en retard
-                    </span>
-                  </div>
-                </div>
+                  </li>
+                  <li t-if="record.application_count.raw_value > 0" style="margin-bottom: 2px;">
+                    <field name="application_count"/> Applications
+                  </li>
+                  <li class="text-warning" t-if="record.activities_today.raw_value > 0" style="margin-bottom: 2px;">
+                    <a name="action_open_today_activities" type="object" class="text-warning">
+                      <field name="activities_today"/> Activities Today
+                    </a>
+                  </li>
+                  <li t-if="record.activities_overdue.raw_value > 0">
+                    <a name="action_open_late_activities" type="object" class="text-danger">
+                      <field name="activities_overdue"/> Late Activities
+                    </a>
+                  </li>
+                </ul>
               </div>
+              <div name="kanban_boxes" class="row flex-nowrap" groups="hr_recruitment.group_hr_recruitment_user"></div>
+            </div>
 
+            <!-- Original footer with Published and Job Page -->
+            <div style="border-top: 1px solid #f3f4f6; padding: 12px 20px; background: #fefefe; display: flex; justify-content: space-between; align-items: center;">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <field name="active" widget="boolean_toggle" nolabel="1"/>
+                <span style="color: #6b7280; font-size: 0.875rem; font-weight: 500;">Published</span>
+              </div>
+              <div>
+                <a href="#" style="color: #3b82f6; font-size: 0.875rem; font-weight: 500; text-decoration: none;">
+                  <i class="fa fa-external-link" style="margin-right: 4px;"></i>Job Page
+                </a>
+              </div>
             </div>
 
           </div>
