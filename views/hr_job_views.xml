@@ -6,43 +6,184 @@
     <field name="model">hr.job</field>
     <field name="inherit_id" ref="hr_recruitment.hr_job_simple_form"/>
     <field name="arch" type="xml">
-      <xpath expr="//form/group" position="after">
-        <separator string="Détails complémentaires" style="margin: 20px 0 15px 0;"/>
-        
-        <!-- Main info in clean 2-column layout -->
-        <group col="2" class="mb-3">
-          <field name="request_date" string="Date demande"/>
-          <field name="deadline_date" string="Échéance"/>
-          <field name="status" string="Statut"/>
-          <field name="experience" string="Expérience"/>
-        </group>
-        
-        <!-- Additional details -->
-        <group col="2" class="mb-3">
-          <field name="language" string="Langue"/>
-          <field name="city" string="Ville"/>
-          <field name="activity_domain" string="Domaine d'activité"/>
-          <field name="type_contrat" string="Type de contrat"/>
-        </group>
+      <!-- Make the form wider and add styling -->
+      <xpath expr="//form" position="attributes">
+        <attribute name="class">o_hr_job_simple_form rhs_minimalist_form</attribute>
+      </xpath>
 
-        <!-- Documents section - only visible for interim -->
-        <group string="Documents à  fournir par le candidat" invisible="type_contrat != 'interim'" class="mt-3">
-          <group col="2">
+      <xpath expr="//form/group" position="after">
+        <!-- Enhanced minimalist separator -->
+        <div style="margin: 32px 0 24px 0; text-align: center;">
+          <div style="display: inline-block; padding: 8px 24px; background: linear-gradient(135deg, #dc2626, #b91c1c); border-radius: 20px; box-shadow: 0 2px 8px rgba(220, 38, 38, 0.2);">
+            <span style="color: white; font-weight: 600; font-size: 0.9rem; letter-spacing: 0.5px;">DÉTAILS COMPLÉMENTAIRES</span>
+          </div>
+        </div>
+        
+        <!-- Main info section with minimalist styling -->
+        <div style="background: #ffffff; border: 1px solid #f1f5f9; border-radius: 16px; padding: 28px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);">
+          <group col="2" class="mb-3" style="gap: 24px;">
+            <field name="request_date" string="Date demande"/>
+            <field name="deadline_date" string="Échéance"/>
+            <field name="status" string="Statut"/>
+            <field name="experience" string="Expérience"/>
+          </group>
+        </div>
+        
+        <!-- Additional details section -->
+        <div style="background: #ffffff; border: 1px solid #f1f5f9; border-radius: 16px; padding: 28px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);">
+          <group col="2" class="mb-3" style="gap: 24px;">
+            <field name="language" string="Langue"/>
+            <field name="city" string="Ville"/>
+            <field name="activity_domain" string="Domaine d'activité"/>
+            <field name="type_contrat" string="Type de contrat"/>
+          </group>
+        </div>
+
+        <!-- Documents section with red accent styling -->
+        <div invisible="type_contrat != 'interim'" 
+             style="background: linear-gradient(135deg, #fef2f2 0%, #ffffff 100%); 
+                    border: 1px solid #fecaca; 
+                    border-left: 3px solid #dc2626; 
+                    border-radius: 16px; 
+                    padding: 28px; 
+                    box-shadow: 0 2px 8px rgba(220, 38, 38, 0.08);">
+          
+          <!-- Minimalist header -->
+          <div style="text-align: center; margin-bottom: 24px;">
+            <h4 style="color: #dc2626; font-weight: 600; font-size: 1rem; margin: 0;">
+              Documents à fournir par le candidat
+            </h4>
+            <div style="width: 40px; height: 2px; background: #dc2626; margin: 8px auto 0;"></div>
+          </div>
+
+          <group col="2" style="gap: 20px;">
             <field name="copy_cin"/>
             <field name="doc_rib"/>
             <field name="doc_cv"/>
             <field name="doc_cnss"/>
             <field name="doc_diplomes"/>
-
           </group>
-           <group col="3">
+          
+          <group col="3" style="gap: 16px; margin-top: 16px;">
             <field name="doc_attestations"/>
             <field name="doc_photos"/>
             <field name="doc_anthropometrique"/>
             <field name="doc_aptitude"/>
             <field name="doc_radiologie"/>
           </group>
-        </group>
+        </div>
+
+        <!-- Enhanced minimalist CSS -->
+        <style>
+          .rhs_minimalist_form {
+            background: #fafbfc !important;
+          }
+          
+          .rhs_minimalist_form .o_form_sheet {
+            max-width: none !important;
+            padding: 40px !important;
+            background: #fafbfc !important;
+            border-radius: 20px !important;
+          }
+          
+          .rhs_minimalist_form .modal-dialog {
+            max-width: 850px !important;
+            width: 85% !important;
+          }
+          
+          .rhs_minimalist_form .o_group {
+            margin-bottom: 0 !important;
+          }
+          
+          .rhs_minimalist_form .o_field_widget input,
+          .rhs_minimalist_form .o_field_widget select,
+          .rhs_minimalist_form .o_field_widget textarea {
+            border: 1px solid #e2e8f0 !important;
+            border-radius: 12px !important;
+            padding: 12px 16px !important;
+            font-size: 0.9rem !important;
+            background: #ffffff !important;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03) !important;
+          }
+          
+          .rhs_minimalist_form .o_field_widget input:focus,
+          .rhs_minimalist_form .o_field_widget select:focus,
+          .rhs_minimalist_form .o_field_widget textarea:focus {
+            border-color: #dc2626 !important;
+            box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.08), 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+            outline: none !important;
+          }
+          
+          .rhs_minimalist_form .o_field_widget.o_field_boolean {
+            display: flex !important;
+            align-items: center !important;
+            gap: 10px !important;
+          }
+          
+          .rhs_minimalist_form .o_field_widget.o_field_boolean input[type="checkbox"] {
+            width: 20px !important;
+            height: 20px !important;
+            border-radius: 6px !important;
+            accent-color: #dc2626 !important;
+            cursor: pointer !important;
+          }
+          
+          .rhs_minimalist_form .o_field_widget.o_field_boolean label {
+            font-size: 0.9rem !important;
+            color: #475569 !important;
+            cursor: pointer !important;
+            margin: 0 !important;
+          }
+          
+          .rhs_minimalist_form .o_form_label {
+            font-weight: 500 !important;
+            color: #334155 !important;
+            font-size: 0.9rem !important;
+            margin-bottom: 6px !important;
+          }
+          
+          .rhs_minimalist_form footer {
+            background: transparent !important;
+            border-top: 1px solid #e2e8f0 !important;
+            padding: 24px 40px !important;
+            margin: 0 -40px -40px !important;
+            border-radius: 0 0 20px 20px !important;
+          }
+          
+          .rhs_minimalist_form footer button.btn-primary {
+            background: linear-gradient(135deg, #dc2626, #b91c1c) !important;
+            border: none !important;
+            border-radius: 12px !important;
+            padding: 12px 28px !important;
+            font-weight: 600 !important;
+            font-size: 0.9rem !important;
+            box-shadow: 0 4px 12px rgba(220, 38, 38, 0.25) !important;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+          }
+          
+          .rhs_minimalist_form footer button.btn-primary:hover {
+            background: linear-gradient(135deg, #b91c1c, #991b1b) !important;
+            transform: translateY(-1px) !important;
+            box-shadow: 0 6px 16px rgba(220, 38, 38, 0.35) !important;
+          }
+          
+          .rhs_minimalist_form footer button.btn-secondary {
+            border: 1px solid #cbd5e1 !important;
+            color: #64748b !important;
+            background: #ffffff !important;
+            border-radius: 12px !important;
+            padding: 12px 24px !important;
+            font-weight: 500 !important;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+          }
+          
+          .rhs_minimalist_form footer button.btn-secondary:hover {
+            background: #f8fafc !important;
+            border-color: #94a3b8 !important;
+            transform: translateY(-1px) !important;
+          }
+        </style>
       </xpath>
     </field>
   </record>
@@ -262,346 +403,252 @@
     </field>
   </record>
 
-  <!-- 7) Enhanced Kanban: Minimalist Modern Design with Red Accents -->
-  <record id="rhs_job_kanban_with_status" model="ir.ui.view">
-    <field name="name">hr.job.kanban.with.status.rhs_emploi</field>
+  <!-- 7) FIXED Aesthetic Kanban Enhancement: Preserve original structure while adding red accents -->
+  <record id="rhs_job_kanban_aesthetic_enhance" model="ir.ui.view">
+    <field name="name">hr.job.kanban.aesthetic.enhance.rhs_emploi</field>
     <field name="model">hr.job</field>
     <field name="inherit_id" ref="hr_recruitment.view_hr_job_kanban"/>
     <field name="arch" type="xml">
 
-      <!-- Enhanced kanban attributes -->
-      <xpath expr="//kanban" position="attributes">
-        <attribute name="class">o_kanban_dashboard o_hr_recruitment_kanban minimalist_modern_kanban</attribute>
-        <attribute name="on_create">hr_recruitment.create_job_simple</attribute>
-        <attribute name="sample">1</attribute>
-        <attribute name="limit">40</attribute>
-        <attribute name="action">%(hr_recruitment.action_hr_job_applications)d</attribute>
-        <attribute name="type">action</attribute>
-      </xpath>
-
-      <!-- Add all required fields -->
-      <xpath expr="//kanban" position="inside">
-        <!-- Original core fields -->
-        <field name="active"/>
-        <field name="name"/>
-        <field name="alias_email"/>
-        <field name="is_favorite"/>
-        <field name="department_id"/>
-        <field name="no_of_recruitment"/>
-        <field name="color"/>
-        <field name="new_application_count"/>
-        <field name="no_of_hired_employee"/>
-        <field name="manager_id"/>
-        <field name="user_id"/>
-        <field name="application_count"/>
-        <field name="all_application_count"/>
-        <field name="activities_today"/>
-        <field name="activities_overdue"/>
-        <field name="company_id"/>
-        <field name="alias_id"/>
-        
-        <!-- Custom enhanced fields -->
+      <!-- Add custom fields to kanban -->
+      <xpath expr="//field[@name='application_count']" position="after">
         <field name="request_date"/>
         <field name="deadline_date"/>
         <field name="status"/>
-        <field name="experience"/>
-        <field name="language"/>
-        <field name="city"/>
-        <field name="activity_domain"/>
         <field name="nbr_jours_restants"/>
-        <field name="type_contrat"/>
       </xpath>
 
-      <!-- Add the original kanban-menu template -->
-      <xpath expr="//templates" position="inside">
-        <t t-name="kanban-menu" groups="hr_recruitment.group_hr_recruitment_user">
-          <div class="container">
-            <div class="row">
-              <div class="col-6 o_kanban_card_manage_section">
-                <h5 role="menuitem" class="o_kanban_card_manage_title">
-                  <span>View</span>
-                </h5>
-                <div role="menuitem" name="menu_view_applications">
-                  <a name="%(hr_recruitment.action_hr_job_applications)d" type="action">Applications</a>
-                </div>
-                <div role="menuitem">
-                  <a name="action_open_activities" type="object">Activities</a>
-                </div>
-                <div role="menuitem">
-                  <a name="%(hr_recruitment.action_hr_job_sources)d" type="action" context="{'default_job_id': id}">Trackers</a>
-                </div>
-              </div>
-              <div class="col-6 o_kanban_card_manage_section">
-                <h5 role="menuitem" class="o_kanban_card_manage_title">
-                  <span>New</span>
-                </h5>
-                <div role="menuitem" name="menu_new_applications">
-                  <a name="%(hr_recruitment.action_hr_applicant_new)d" type="action">Application</a>
-                </div>
-              </div>
-              <div class="col-6 o_kanban_card_manage_section">
-                <h5 role="menuitem" class="o_kanban_card_manage_title">
-                  <span>Reporting</span>
-                </h5>
-                <div role="menuitem" name="o_kanban_job_reporting">
-                  <a name="%(hr_recruitment.action_hr_recruitment_report_filtered_job)d" type="action">Analysis</a>
-                </div>
-              </div>
-            </div>
-            <div class="o_kanban_card_manage_settings row">
-              <div class="col-6" role="menuitem" aria-haspopup="true">
-                <ul class="oe_kanban_colorpicker" data-field="color" role="popup"/>
-              </div>
-              <div class="col-6" role="menuitem">
-                <a class="dropdown-item" t-if="widget.editable" name="edit_job" type="edit">Configuration</a>
-                <a class="dropdown-item" t-if="record.active.raw_value" name="toggle_active" type="object">Archive</a>
-                <a class="dropdown-item" t-if="!record.active.raw_value" name="toggle_active" type="object">Unarchive</a>
-              </div>
-            </div>
-          </div>
-        </t>
+      <!-- Enhance the card styling while preserving original structure -->
+      <xpath expr="//t[@t-name='kanban-box']/div" position="attributes">
+        <attribute name="style">background: linear-gradient(135deg, #ffffff 0%, #fefefe 100%);
+                               border: 1px solid #f1f5f9;
+                               border-radius: 16px;
+                               box-shadow: 0 2px 12px rgba(220, 38, 38, 0.08), 0 1px 3px rgba(0, 0, 0, 0.05);
+                               transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                               overflow: hidden;
+                               position: relative;</attribute>
+        <attribute name="class">rhs_enhanced_card</attribute>
       </xpath>
 
-      <!-- Clean minimalist kanban card template with all original functionality -->
-      <xpath expr="//t[@t-name='kanban-box']" position="replace">
-        <t t-name="kanban-box">
-          <div t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''} minimalist-card"
-               style="background: #ffffff;
-                      border: 1px solid #f3f4f6;
-                      border-radius: 18px;
-                      box-shadow: 0 2px 8px rgba(220, 38, 38, 0.04), 0 1px 3px rgba(0, 0, 0, 0.02);
-                      transition: all 0.3s ease;
-                      overflow: hidden;
-                      position: relative;
-                      margin: 24px;
-                      min-height: 240px;">
+      <!-- Add red accent top border after the main div -->
+      <xpath expr="//t[@t-name='kanban-box']/div" position="inside">
+        <t t-set="status_value" t-value="record.status and record.status.raw_value or ''"/>
+        <div t-attf-style="position: absolute;
+                          top: 0;
+                          left: 0;
+                          right: 0;
+                          height: 4px;
+                          background: linear-gradient(90deg, 
+                            #{status_value == 'ouvert' ? '#dc2626' : 
+                              status_value == 'en_cours' ? '#f59e0b' : 
+                              status_value == 'cloture' ? '#6b7280' : 
+                              status_value == 'annule' ? '#ef4444' : '#dc2626'} 0%,
+                            #{status_value == 'ouvert' ? '#b91c1c' : 
+                              status_value == 'en_cours' ? '#d97706' : 
+                              status_value == 'cloture' ? '#4b5563' : 
+                              status_value == 'annule' ? '#dc2626' : '#b91c1c'} 100%);"></div>
+      </xpath>
 
-            <!-- Clean status indicator with red accent -->
-            <t t-set="status_value" t-value="record.status and record.status.raw_value or ''"/>
-            <div t-attf-style="position: absolute;
-                              top: 0;
-                              left: 0;
-                              right: 0;
-                              height: 3px;
-                              background: #{status_value == 'ouvert' ? '#dc2626' : 
-                                          status_value == 'en_cours' ? '#f97316' : 
-                                          status_value == 'cloture' ? '#6b7280' : 
-                                          status_value == 'annule' ? '#991b1b' : '#dc2626'};"></div>
-
-            <!-- Original kanban card header with modern styling -->
-            <div class="o_kanban_card_header d-flex align-items-baseline gap-1" style="padding: 20px 20px 12px;">
-              <field name="is_favorite" widget="boolean_favorite" nolabel="1" 
-                     style="color: #dc2626; font-size: 1.1rem;"/>
-              
-              <div class="o_kanban_card_header_title" style="flex: 1;">
-                <div class="o_primary">
-                  <h3 style="color: #111827;
+      <!-- Enhance the header area -->
+      <xpath expr="//div[hasclass('o_kanban_card_header')]" position="after">
+        <!-- Enhanced status badge -->
+        <div style="padding: 0 20px 16px;">
+          <span t-attf-style="display: inline-flex;
+                             align-items: center;
+                             gap: 8px;
+                             padding: 8px 16px;
+                             border-radius: 25px;
+                             font-size: 0.8rem;
                              font-weight: 600;
-                             font-size: 1.15rem;
-                             line-height: 1.4;
-                             margin: 0;
-                             letter-spacing: -0.025em;">
-                    <span><t t-esc="record.name.value"/>
-                      <span t-if="record.activity_domain.value" 
-                            style="color: #6b7280; font-weight: 400; font-size: 1rem;">
-                        / <t t-esc="record.activity_domain.value"/>
-                      </span>
-                    </span>
-                  </h3>
-                </div>
-                <div class="text-muted" style="margin-top: 4px;">
-                  <field name="user_id"/>
-                </div>
-                <div class="o_secondary" groups="base.group_multi_company" style="margin-top: 2px;">
-                  <small><i class="fa fa-building-o" role="img" aria-label="Company" title="Company"></i> <field name="company_id"/></small>
-                </div>
-                <div t-if="record.alias_email.value" class="o_secondary o_job_alias" style="margin-top: 2px;">
-                  <small><i class="fa fa-envelope-o" role="img" aria-label="Alias" title="Alias"></i> <field name="alias_id"/></small>
-                </div>
+                             text-transform: uppercase;
+                             letter-spacing: 0.5px;
+                             background: #{status_value == 'ouvert' ? 'linear-gradient(135deg, #fef2f2, #fee2e2)' : 
+                                         status_value == 'en_cours' ? 'linear-gradient(135deg, #fff7ed, #fed7aa)' : 
+                                         status_value == 'cloture' ? 'linear-gradient(135deg, #f9fafb, #f3f4f6)' : 
+                                         status_value == 'annule' ? 'linear-gradient(135deg, #fef1f1, #fee2e2)' : 
+                                         'linear-gradient(135deg, #fef2f2, #fee2e2)'};
+                             color: #{status_value == 'ouvert' ? '#b91c1c' : 
+                                     status_value == 'en_cours' ? '#c2410c' : 
+                                     status_value == 'cloture' ? '#4b5563' : 
+                                     status_value == 'annule' ? '#991b1b' : '#b91c1c'};
+                             border: 2px solid #{status_value == 'ouvert' ? '#fca5a5' : 
+                                                status_value == 'en_cours' ? '#fdba74' : 
+                                                status_value == 'cloture' ? '#d1d5db' : 
+                                                status_value == 'annule' ? '#fca5a5' : '#fca5a5'};
+                             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+            <div t-attf-style="width: 8px;
+                               height: 8px;
+                               border-radius: 50%;
+                               background: #{status_value == 'ouvert' ? '#dc2626' : 
+                                           status_value == 'en_cours' ? '#ea580c' : 
+                                           status_value == 'cloture' ? '#6b7280' : 
+                                           status_value == 'annule' ? '#dc2626' : '#dc2626'};
+                               box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.8);"></div>
+            <t t-esc="record.status and record.status.value or 'N/A'"/>
+          </span>
+
+          <!-- Enhanced urgency indicator -->
+          <t t-set="days_remaining" t-value="record.nbr_jours_restants and record.nbr_jours_restants.raw_value"/>
+          <div t-if="days_remaining !== undefined" 
+               t-attf-style="float: right;
+                             padding: 6px 12px;
+                             border-radius: 20px;
+                             font-size: 0.75rem;
+                             font-weight: 700;
+                             text-transform: uppercase;
+                             letter-spacing: 0.5px;
+                             margin-top: 8px;
+                             background: #{days_remaining &lt; 0 ? 'linear-gradient(135deg, #fee2e2, #fecaca)' : 
+                                         days_remaining &lt;= 7 ? 'linear-gradient(135deg, #fef3c7, #fed7aa)' : 
+                                         'linear-gradient(135deg, #f0fdf4, #dcfce7)'};
+                             color: #{days_remaining &lt; 0 ? '#991b1b' : 
+                                     days_remaining &lt;= 7 ? '#92400e' : '#166534'};
+                             border: 2px solid #{days_remaining &lt; 0 ? '#fca5a5' : 
+                                                days_remaining &lt;= 7 ? '#fdba74' : '#86efac'};
+                             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+            <t t-esc="record.nbr_jours_restants.value"/>j
+          </div>
+        </div>
+
+        <!-- Enhanced date info section -->
+        <div style="padding: 0 20px 20px;">
+          <div style="display: grid; 
+                      grid-template-columns: 1fr 1fr; 
+                      gap: 16px;
+                      background: linear-gradient(135deg, #fafafa, #f8fafc);
+                      padding: 16px;
+                      border-radius: 12px;
+                      border: 1px solid #f1f5f9;">
+            
+            <!-- Request Date -->
+            <div style="text-align: center;">
+              <div style="color: #6b7280; 
+                          font-size: 0.7rem; 
+                          font-weight: 600; 
+                          text-transform: uppercase; 
+                          letter-spacing: 0.8px; 
+                          margin-bottom: 6px;
+                          display: flex;
+                          align-items: center;
+                          justify-content: center;
+                          gap: 4px;">
+                <i class="fa fa-calendar" style="color: #dc2626;"></i>
+                Demande
               </div>
-
-              <!-- Urgency indicator -->
-              <t t-set="days_remaining" t-value="record.nbr_jours_restants and record.nbr_jours_restants.raw_value"/>
-              <div t-if="days_remaining !== undefined" 
-                   t-attf-class="urgency-pill #{days_remaining &lt; 0 ? 'overdue' : days_remaining &lt;= 7 ? 'urgent' : 'normal'}"
-                   t-attf-style="padding: 4px 10px;
-                                 border-radius: 12px;
-                                 font-size: 0.7rem;
-                                 font-weight: 600;
-                                 background: #{days_remaining &lt; 0 ? '#fee2e2' : days_remaining &lt;= 7 ? '#fef3c7' : '#fef7f7'};
-                                 color: #{days_remaining &lt; 0 ? '#dc2626' : days_remaining &lt;= 7 ? '#d97706' : '#dc2626'};
-                                 border: 1px solid #{days_remaining &lt; 0 ? '#fecaca' : days_remaining &lt;= 7 ? '#fed7aa' : '#fecaca'};">
-                <t t-esc="record.nbr_jours_restants.value"/>j
-              </div>
-            </div>
-
-            <!-- Status badge -->
-            <div style="padding: 0 20px 12px;">
-              <span t-attf-style="display: inline-flex;
-                                 align-items: center;
-                                 gap: 6px;
-                                 padding: 5px 12px;
-                                 border-radius: 16px;
-                                 font-size: 0.7rem;
-                                 font-weight: 500;
-                                 background: #{status_value == 'ouvert' ? '#fef2f2' : 
-                                             status_value == 'en_cours' ? '#fff7ed' : 
-                                             status_value == 'cloture' ? '#f9fafb' : 
-                                             status_value == 'annule' ? '#fef1f1' : '#fef2f2'};
-                                 color: #{status_value == 'ouvert' ? '#dc2626' : 
-                                         status_value == 'en_cours' ? '#ea580c' : 
-                                         status_value == 'cloture' ? '#6b7280' : 
-                                         status_value == 'annule' ? '#991b1b' : '#dc2626'};
-                                 border: 1px solid #{status_value == 'ouvert' ? '#fecaca' : 
-                                                    status_value == 'en_cours' ? '#fed7aa' : 
-                                                    status_value == 'cloture' ? '#e5e7eb' : 
-                                                    status_value == 'annule' ? '#fca5a5' : '#fecaca'};">
-                <div t-attf-style="width: 5px;
-                                   height: 5px;
-                                   border-radius: 50%;
-                                   background: #{status_value == 'ouvert' ? '#dc2626' : 
-                                               status_value == 'en_cours' ? '#ea580c' : 
-                                               status_value == 'cloture' ? '#6b7280' : 
-                                               status_value == 'annule' ? '#991b1b' : '#dc2626'};"></div>
-                <t t-esc="record.status and record.status.value or 'N/A'"/>
-              </span>
-            </div>
-
-            <!-- Info grid -->
-            <div style="padding: 0 20px 16px;">
-              <div style="display: grid; 
-                          grid-template-columns: 1fr 1fr; 
-                          gap: 8px 16px;">
-                
-                <!-- Request Date -->
-                <div>
-                  <div style="color: #6b7280; font-size: 0.65rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;">
-                    Date demande
-                  </div>
-                  <div style="color: #111827; font-size: 0.75rem; font-weight: 500;">
-                    <t t-esc="record.request_date and record.request_date.value or '-'"/>
-                  </div>
-                </div>
-
-                <!-- Deadline -->
-                <div>
-                  <div style="color: #dc2626; font-size: 0.65rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;">
-                    Date Échéance
-                  </div>
-                  <div style="color: #dc2626; font-size: 0.75rem; font-weight: 600;">
-                    <t t-esc="record.deadline_date and record.deadline_date.value or '-'"/>
-                  </div>
-                </div>
-
-                <!-- Experience -->
-                <div>
-                  <div style="color: #6b7280; font-size: 0.65rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;">
-                    Expérience
-                  </div>
-                  <div style="color: #111827; font-size: 0.75rem; font-weight: 500;">
-                    <t t-esc="record.experience and record.experience.value or '-'"/>
-                  </div>
-                </div>
-
-                <!-- City -->
-                <div>
-                  <div style="color: #6b7280; font-size: 0.65rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;">
-                    Ville
-                  </div>
-                  <div style="color: #111827; font-size: 0.75rem; font-weight: 500;">
-                    <t t-esc="record.city and record.city.value or '-'"/>
-                  </div>
-                </div>
+              <div style="color: #111827; 
+                          font-size: 0.85rem; 
+                          font-weight: 600;
+                          background: white;
+                          padding: 6px 10px;
+                          border-radius: 8px;
+                          border: 1px solid #e5e7eb;">
+                <t t-esc="record.request_date and record.request_date.value or '-'"/>
               </div>
             </div>
 
-            <!-- Original recruitment job container with modern styling -->
-            <div class="container o_recruitment_job_container o_kanban_card_content mt-0 mt-sm-3" style="padding: 0 20px 16px; margin">
-              <div class="row">
-                <div class="col-7">
-                  <button class="btn btn-primary" 
-                          name="%(hr_recruitment.action_hr_job_applications)d" 
-                          type="action"
-                          style="background: linear-gradient(135deg, #dc2626, #b91c1c);
-                                 border: none;
-                                 border-radius: 12px;
-                                 padding: 8px 14px;
-                                 font-size: 0.75rem;
-                                 font-weight: 500;
-                                 transition: all 0.2s ease;
-                                 box-shadow: 0 2px 4px rgba(220, 38, 38, 0.2);">
-                    <field name="new_application_count"/> New Applications
-                  </button>
-                </div>
-                
-                <ul class="col-5 o_job_activities" style="list-style: none; padding: 0; margin: 0; font-size: 0.75rem;">
-                  <li style="margin-bottom: 2px;">
-                    <a name="edit_job" type="edit" 
-                       t-attf-class="{{ record.no_of_recruitment.raw_value > 0 ? 'text-primary fw-bolder' : 'text-secondary' }}" 
-                       groups="hr_recruitment.group_hr_recruitment_user">
-                      <field name="no_of_recruitment"/> To Recruit
-                    </a>
-                    <span t-attf-class="{{ record.no_of_recruitment.raw_value > 0 ? 'text-primary fw-bolder' : 'text-secondary' }}" 
-                          groups="!hr_recruitment.group_hr_recruitment_user">
-                      <field name="no_of_recruitment"/> To Recruit
-                    </span>
-                  </li>
-                  <li t-if="record.application_count.raw_value > 0" style="margin-bottom: 2px;">
-                    <field name="application_count"/> Applications
-                  </li>
-                  <li class="text-warning" t-if="record.activities_today.raw_value > 0" style="margin-bottom: 2px;">
-                    <a name="action_open_today_activities" type="object" class="text-warning">
-                      <field name="activities_today"/> Activities Today
-                    </a>
-                  </li>
-                  <li t-if="record.activities_overdue.raw_value > 0">
-                    <a name="action_open_late_activities" type="object" class="text-danger">
-                      <field name="activities_overdue"/> Late Activities
-                    </a>
-                  </li>
-                </ul>
+            <!-- Deadline -->
+            <div style="text-align: center;">
+              <div style="color: #dc2626; 
+                          font-size: 0.7rem; 
+                          font-weight: 600; 
+                          text-transform: uppercase; 
+                          letter-spacing: 0.8px; 
+                          margin-bottom: 6px;
+                          display: flex;
+                          align-items: center;
+                          justify-content: center;
+                          gap: 4px;">
+                <i class="fa fa-clock-o" style="color: #dc2626;"></i>
+                Échéance
               </div>
-              <div name="kanban_boxes" class="row flex-nowrap" groups="hr_recruitment.group_hr_recruitment_user"></div>
+              <div style="color: #dc2626; 
+                          font-size: 0.85rem; 
+                          font-weight: 700;
+                          background: linear-gradient(135deg, #fef2f2, #fee2e2);
+                          padding: 6px 10px;
+                          border-radius: 8px;
+                          border: 2px solid #fca5a5;">
+                <t t-esc="record.deadline_date and record.deadline_date.value or '-'"/>
+              </div>
             </div>
           </div>
+        </div>
+      </xpath>
 
-          <!-- Minimalist CSS with red accents -->
-          <style>
-            .minimalist-card:hover {
-              transform: translateY(-4px);
-              box-shadow: 0 8px 25px rgba(220, 38, 38, 0.12), 0 4px 12px rgba(0, 0, 0, 0.04);
-              border-color: #fecaca;
-            }
+      <!-- Style the buttons with red theme -->
+      <xpath expr="//button[@class='btn btn-primary']" position="attributes">
+        <attribute name="style">background: linear-gradient(135deg, #dc2626, #b91c1c) !important;
+                               border: none !important;
+                               border-radius: 10px !important;
+                               padding: 10px 16px !important;
+                               font-size: 0.8rem !important;
+                               font-weight: 600 !important;
+                               transition: all 0.2s ease !important;
+                               box-shadow: 0 3px 8px rgba(220, 38, 38, 0.3) !important;
+                               text-transform: uppercase !important;
+                               letter-spacing: 0.5px !important;</attribute>
+      </xpath>
 
-            .minimalist-card .btn:hover {
-              background: linear-gradient(135deg, #b91c1c, #991b1b) !important;
-              transform: translateY(-1px);
-              box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
-            }
+      <!-- Add enhanced CSS with red theme -->
+      <xpath expr="//templates" position="after">
+        <style>
+          .rhs_enhanced_card:hover {
+            transform: translateY(-6px) scale(1.02) !important;
+            box-shadow: 0 8px 30px rgba(220, 38, 38, 0.15), 0 4px 15px rgba(0, 0, 0, 0.1) !important;
+            border-color: #fca5a5 !important;
+          }
 
-            .minimalist_modern_kanban .o_kanban_record {
-              margin: 24px !important;
-            }
+          .rhs_enhanced_card .btn-primary:hover {
+            background: linear-gradient(135deg, #b91c1c, #991b1b) !important;
+            transform: translateY(-2px) !important;
+            box-shadow: 0 6px 16px rgba(220, 38, 38, 0.4) !important;
+          }
 
-            .urgency-pill.overdue {
-              animation: subtle-pulse 2s ease-in-out infinite;
-            }
+          .rhs_enhanced_card:hover .o_kanban_card_header h3,
+          .rhs_enhanced_card:hover .o_kanban_card_header .o_primary {
+            color: #dc2626 !important;
+            transition: color 0.3s ease !important;
+          }
 
-            @keyframes subtle-pulse {
-              0%, 100% { opacity: 1; }
-              50% { opacity: 0.8; }
-            }
+          .o_kanban_dashboard.o_hr_recruitment_kanban .o_kanban_record {
+            margin: 20px !important;
+          }
 
-            .minimalist-card {
-              backdrop-filter: blur(10px);
-            }
+          .rhs_enhanced_card .fa {
+            transition: all 0.2s ease !important;
+          }
 
-            .minimalist-card:hover .urgency-pill {
-              transform: scale(1.05);
-            }
-          </style>
+          .rhs_enhanced_card:hover .fa {
+            transform: scale(1.1) !important;
+          }
 
-        </t>
+          /* Enhanced favorite star styling */
+          .rhs_enhanced_card .o_field_boolean_favorite .fa-star {
+            color: #dc2626 !important;
+            font-size: 1.2rem !important;
+            filter: drop-shadow(0 1px 2px rgba(220, 38, 38, 0.3)) !important;
+          }
+
+          /* Make sure Published ribbon is visible */
+          .rhs_enhanced_card .ribbon {
+            position: absolute !important;
+            top: 15px !important;
+            right: -8px !important;
+            z-index: 10 !important;
+          }
+
+          .rhs_enhanced_card .ribbon-inner {
+            background: linear-gradient(135deg, #16a34a, #15803d) !important;
+            color: white !important;
+            padding: 8px 20px !important;
+            font-size: 0.75rem !important;
+            font-weight: 600 !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.5px !important;
+            border-radius: 4px !important;
+            box-shadow: 0 2px 8px rgba(22, 163, 74, 0.3) !important;
+          }
+        </style>
       </xpath>
 
     </field>
