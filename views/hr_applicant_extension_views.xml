@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <data>
+
+    <record id="view_hr_applicant_form_inherit_education" model="ir.ui.view">
+      <field name="name">hr.applicant.form.education.extension</field>
+      <field name="model">hr.applicant</field>
+      <field name="inherit_id" ref="hr_recruitment.hr_applicant_view_form"/>
+      <field name="arch" type="xml">
+
+        <!-- Insert Address above Degree -->
+        <xpath expr="//field[@name='type_id']" position="before">
+          <field name="address"/>
+        </xpath>
+
+        <!-- Add Établissement and Date d’obtention after Degree -->
+        <xpath expr="//field[@name='type_id']" position="after">
+          <field name="etablissement"/>
+          <field name="date_obtention"/>
+        </xpath>
+
+      </field>
+    </record>
+
+  </data>
+</odoo>

@@ -1,0 +1,592 @@
+<?xml version="1.0"?>
+<odoo>
+<data>
+    <!-- 1. Accusé de réception de candidature -->
+    <record id="mail_template_application_acknowledgment" model="mail.template">
+        <field name="name">RHS EMPLOI - Accusé de réception de candidature</field>
+        <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
+        <field name="subject">Confirmation de réception de votre candidature — {{ object.job_id.name }}</field>
+        <field name="email_to">{{ (not object.partner_id and object.email_from or '') }}</field>
+        <field name="partner_to">{{ object.partner_id.id or '' }}</field>
+        <field name="description">Email de confirmation envoyé à toutes les nouvelles candidatures</field>
+        <field name="body_html" type="html">
+            <div style="max-width: 580px; margin: 0 auto; background: #ffffff; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', system-ui, sans-serif; line-height: 1.65; color: #1a1a1a;">
+                
+                <!-- Header -->
+                <div style="padding: 56px 48px 40px; text-align: center; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); position: relative; overflow: hidden;">
+                    <div style="position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, #dc2626, #ef4444);"></div>
+                    <h1 style="color: #ffffff; margin: 0 0 12px 0; font-size: 26px; font-weight: 700; letter-spacing: -0.025em;">RHS EMPLOI</h1>
+                    <div style="width: 32px; height: 1px; background: rgba(255,255,255,0.3); margin: 20px auto; border-radius: 1px;"></div>
+                    <p style="color: #e2e8f0; margin: 0; font-size: 13px; font-weight: 500; letter-spacing: 1px; text-transform: uppercase;">Candidature reçue</p>
+                </div>
+
+                <!-- Content -->
+                <div style="padding: 56px 48px;">
+                    <p style="font-size: 19px; font-weight: 600; margin: 0 0 36px 0; color: #1a1a1a;">
+                        Bonjour <strong style="color: #dc2626;"><t t-out="object.partner_name or 'Madame/Monsieur'">Madame/Monsieur</t></strong>,
+                    </p>
+                    
+                    <p style="font-size: 16px; margin: 0 0 32px 0; color: #374151; line-height: 1.7;">
+                        Nous vous remercions pour l'intérêt que vous portez à <strong style="color: #1a1a1a;">RHS EMPLOI</strong> ainsi que pour votre candidature au poste de 
+                        <strong style="color: #1a1a1a; background: #f8fafc; padding: 2px 6px; border-radius: 4px;"><t t-out="object.job_id.name or ''">Nom du poste</t></strong>.
+                    </p>
+                    
+                    <p style="font-size: 16px; margin: 0 0 32px 0; color: #374151; line-height: 1.7;">
+                        Nous vous confirmons la bonne réception de votre dossier, qui sera étudié avec attention par notre équipe recrutement.
+                    </p>
+                    
+                    <!-- Status Card -->
+                    <div style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border: 1px solid #e2e8f0; border-radius: 16px; padding: 32px; margin: 40px 0; position: relative;">
+                        <div style="position: absolute; top: 0; left: 24px; width: 48px; height: 4px; background: #dc2626; border-radius: 0 0 4px 4px;"></div>
+                        <p style="font-size: 16px; margin: 0; color: #475569; font-weight: 500; text-align: center;">
+                            Si votre profil correspond aux critères du poste, nous ne manquerons pas de revenir vers vous dans les plus brefs délais.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <div style="padding: 40px 48px; background: #f8fafc; border-top: 1px solid #e2e8f0;">
+                    <div style="text-align: center;">
+                        <p style="margin: 0 0 8px 0; font-size: 16px; font-weight: 700; color: #1a1a1a;">MOUNSIF Amina</p>
+                        <p style="margin: 0 0 16px 0; font-size: 14px; color: #64748b; font-style: italic;">Chargée de recrutement</p>
+                        <p style="margin: 0; font-size: 16px; font-weight: 700; color: #dc2626;">RHS EMPLOI</p>
+                    </div>
+                </div>
+            </div>
+        </field>
+        <field name="auto_delete" eval="True"/>
+        <field name="lang">{{ object.partner_id.lang or '' }}</field>
+    </record>
+
+    <!-- 2. Convocation à un entretien -->
+    <record id="mail_template_interview_invitation" model="mail.template">
+        <field name="name">RHS EMPLOI - Convocation à un entretien</field>
+        <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
+        <field name="subject">Entretien de recrutement — {{ object.job_id.name }}</field>
+        <field name="email_to">{{ (not object.partner_id and object.email_from or '') }}</field>
+        <field name="partner_to">{{ object.partner_id.id or '' }}</field>
+        <field name="description">Invitation pour entretien d'embauche</field>
+        <field name="body_html" type="html">
+            <div style="max-width: 580px; margin: 0 auto; background: #ffffff; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', system-ui, sans-serif; line-height: 1.65; color: #1a1a1a;">
+                
+                <!-- Header -->
+                <div style="padding: 56px 48px 40px; text-align: center; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); position: relative; overflow: hidden;">
+                    <div style="position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, #dc2626, #ef4444);"></div>
+                    <h1 style="color: #ffffff; margin: 0 0 12px 0; font-size: 26px; font-weight: 700; letter-spacing: -0.025em;">ENTRETIEN</h1>
+                    <div style="width: 32px; height: 1px; background: rgba(255,255,255,0.3); margin: 20px auto; border-radius: 1px;"></div>
+                    <p style="color: #e2e8f0; margin: 0; font-size: 13px; font-weight: 500; letter-spacing: 1px; text-transform: uppercase;">Invitation</p>
+                </div>
+
+                <!-- Content -->
+                <div style="padding: 56px 48px;">
+                    <p style="font-size: 19px; font-weight: 600; margin: 0 0 36px 0; color: #1a1a1a;">
+                        Bonjour <span style="color: #dc2626;"><t t-out="object.partner_name or 'Madame/Monsieur'">Madame/Monsieur</t></span>,
+                    </p>
+                    
+                    <p style="font-size: 16px; margin: 0 0 32px 0; color: #374151; line-height: 1.7;">
+                        À la suite de l'analyse de votre candidature, nous souhaiterions vous rencontrer dans le cadre d'un entretien relatif au poste de 
+                        <strong style="color: #1a1a1a; background: #f8fafc; padding: 2px 6px; border-radius: 4px;"><t t-out="object.job_id.name or ''">Nom du poste</t></strong>.
+                    </p>
+                    
+                    <p style="font-size: 16px; margin: 0 0 40px 0; color: #374151; line-height: 1.7;">
+                        Voici les informations concernant le rendez-vous :
+                    </p>
+                    
+                    <!-- Appointment Details -->
+                    <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 20px; padding: 40px; margin: 40px 0; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);">
+                        <h3 style="margin: 0 0 32px 0; font-size: 18px; font-weight: 700; color: #1a1a1a; text-align: center;">
+                            Détails du rendez-vous
+                        </h3>
+                        
+                        <div style="display: flex; flex-direction: column; gap: 24px;">
+                            <div style="display: flex; align-items: flex-start; padding: 16px 0; border-bottom: 1px solid #f1f5f9;">
+                                <div style="min-width: 90px;">
+                                    <span style="background: #0f172a; color: white; padding: 8px 16px; border-radius: 24px; font-size: 11px; font-weight: 700; letter-spacing: 0.5px;">DATE</span>
+                                </div>
+                                <span style="margin-left: 20px; color: #1a1a1a; font-size: 16px; font-weight: 600;">[Jour, Date]</span>
+                            </div>
+                            
+                            <div style="display: flex; align-items: flex-start; padding: 16px 0; border-bottom: 1px solid #f1f5f9;">
+                                <div style="min-width: 90px;">
+                                    <span style="background: #0f172a; color: white; padding: 8px 16px; border-radius: 24px; font-size: 11px; font-weight: 700; letter-spacing: 0.5px;">HEURE</span>
+                                </div>
+                                <span style="margin-left: 20px; color: #1a1a1a; font-size: 16px; font-weight: 600;">[Heure précise]</span>
+                            </div>
+                            
+                            <div style="display: flex; align-items: flex-start; padding: 16px 0;">
+                                <div style="min-width: 90px;">
+                                    <span style="background: #0f172a; color: white; padding: 8px 16px; border-radius: 24px; font-size: 11px; font-weight: 700; letter-spacing: 0.5px;">LIEU</span>
+                                </div>
+                                <div style="margin-left: 20px;">
+                                    <span style="color: #1a1a1a; font-size: 16px; font-weight: 600; display: block; margin-bottom: 8px;">137, Boulevard Mly Ismail, N° 31 — 3ème étage</span>
+                                    <span style="color: #64748b; font-size: 15px;">Roches Noires — Casablanca</span>
+                                    <div style="margin-top: 12px; padding: 8px 12px; background: #f8fafc; border-radius: 8px; border-left: 3px solid #dc2626;">
+                                        <span style="color: #374151; font-size: 14px; font-weight: 500;">ou</span><br/>
+                                        <span style="color: #374151; font-size: 14px;">Lien de visioconférence : [à insérer]</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Requirements Notice -->
+                    <div style="background: #fef3c7; border: 1px solid #fed7aa; border-radius: 16px; padding: 28px; margin: 32px 0;">
+                        <p style="margin: 0; font-size: 15px; color: #92400e; font-weight: 500; line-height: 1.6;">
+                            <strong>À prévoir :</strong> Nous vous prions de bien vouloir vous munir, lors de cet entretien, de votre CV à jour ainsi que des pièces justificatives attestant de votre niveau de formation et de vos compétences en lien avec le poste proposé.
+                        </p>
+                    </div>
+                    
+                    <p style="font-size: 16px; margin: 32px 0 0 0; color: #374151; line-height: 1.7;">
+                        Dans l'attente de cet échange, nous vous prions d'agréer, <t t-out="object.partner_name or '[Prénom]'">[Prénom]</t>, l'expression de nos salutations distinguées.
+                    </p>
+                </div>
+
+                <!-- Footer -->
+                <div style="padding: 40px 48px; background: #f8fafc; border-top: 1px solid #e2e8f0;">
+                    <div style="text-align: center;">
+                        <p style="margin: 0 0 8px 0; font-size: 16px; font-weight: 700; color: #1a1a1a;">MOUNSIF Amina</p>
+                        <p style="margin: 0 0 16px 0; font-size: 14px; color: #64748b; font-style: italic;">Chargée de recrutement</p>
+                        <p style="margin: 0; font-size: 16px; font-weight: 700; color: #dc2626;">RHS EMPLOI</p>
+                    </div>
+                </div>
+            </div>
+        </field>
+        <field name="auto_delete" eval="True"/>
+        <field name="lang">{{ object.partner_id.lang or '' }}</field>
+    </record>
+
+    <!-- 3. Relance après absence de réponse -->
+    <record id="mail_template_interview_followup" model="mail.template">
+        <field name="name">RHS EMPLOI - Relance après absence de réponse</field>
+        <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
+        <field name="subject">Relance — Entretien pour le poste de {{ object.job_id.name }}</field>
+        <field name="email_to">{{ (not object.partner_id and object.email_from or '') }}</field>
+        <field name="partner_to">{{ object.partner_id.id or '' }}</field>
+        <field name="description">Relance pour candidat qui n'a pas répondu à l'invitation d'entretien</field>
+        <field name="body_html" type="html">
+            <div style="max-width: 580px; margin: 0 auto; background: #ffffff; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', system-ui, sans-serif; line-height: 1.65; color: #1a1a1a;">
+                
+                <!-- Header -->
+                <div style="padding: 56px 48px 40px; text-align: center; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); position: relative; overflow: hidden;">
+                    <div style="position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, #dc2626, #ef4444);"></div>
+                    <h1 style="color: #ffffff; margin: 0 0 12px 0; font-size: 26px; font-weight: 700; letter-spacing: -0.025em;">RELANCE</h1>
+                    <div style="width: 32px; height: 1px; background: rgba(255,255,255,0.3); margin: 20px auto; border-radius: 1px;"></div>
+                    <p style="color: #e2e8f0; margin: 0; font-size: 13px; font-weight: 500; letter-spacing: 1px; text-transform: uppercase;">Invitation entretien</p>
+                </div>
+
+                <!-- Content -->
+                <div style="padding: 56px 48px;">
+                    <p style="font-size: 19px; font-weight: 600; margin: 0 0 36px 0; color: #1a1a1a;">
+                        Bonjour <span style="color: #dc2626;"><t t-out="object.partner_name or 'Madame/Monsieur'">Madame/Monsieur</t></span>,
+                    </p>
+                    
+                    <p style="font-size: 16px; margin: 0 0 32px 0; color: #374151; line-height: 1.7;">
+                        Nous faisons suite à notre invitation à un entretien pour le poste de 
+                        <strong style="color: #1a1a1a; background: #f8fafc; padding: 2px 6px; border-radius: 4px;"><t t-out="object.job_id.name or ''">Nom du poste</t></strong>, restée sans réponse à ce jour.
+                    </p>
+                    
+                    <!-- Question Card -->
+                    <div style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border: 1px solid #e2e8f0; border-radius: 16px; padding: 36px; margin: 40px 0; text-align: center;">
+                        <p style="font-size: 16px; margin: 0; color: #475569; font-weight: 500; line-height: 1.6;">
+                            Pouvez-vous nous confirmer si vous êtes toujours intéressé(e) par cette opportunité ou si un empêchement vous empêche d'y donner suite ?
+                        </p>
+                    </div>
+                    
+                    <p style="font-size: 16px; margin: 32px 0 0 0; color: #374151;">
+                        Dans l'attente de votre retour,
+                    </p>
+                </div>
+
+                <!-- Footer -->
+                <div style="padding: 40px 48px; background: #f8fafc; border-top: 1px solid #e2e8f0;">
+                    <div style="text-align: center;">
+                        <p style="margin: 0 0 8px 0; font-size: 16px; font-weight: 700; color: #1a1a1a;">MOUNSIF Amina</p>
+                        <p style="margin: 0 0 16px 0; font-size: 14px; color: #64748b; font-style: italic;">Chargée de recrutement</p>
+                        <p style="margin: 0; font-size: 16px; font-weight: 700; color: #dc2626;">RHS EMPLOI</p>
+                    </div>
+                </div>
+            </div>
+        </field>
+        <field name="auto_delete" eval="True"/>
+        <field name="lang">{{ object.partner_id.lang or '' }}</field>
+    </record>
+
+    <!-- 4. Retour après entretien - poursuite du processus -->
+    <record id="mail_template_interview_next_step" model="mail.template">
+        <field name="name">RHS EMPLOI - Poursuite du processus de recrutement</field>
+        <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
+        <field name="subject">Suite à notre entretien — {{ object.job_id.name }}</field>
+        <field name="email_to">{{ (not object.partner_id and object.email_from or '') }}</field>
+        <field name="partner_to">{{ object.partner_id.id or '' }}</field>
+        <field name="description">Email informant de la poursuite du processus après entretien</field>
+        <field name="body_html" type="html">
+            <div style="max-width: 580px; margin: 0 auto; background: #ffffff; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', system-ui, sans-serif; line-height: 1.65; color: #1a1a1a;">
+                
+                <!-- Header -->
+                <div style="padding: 56px 48px 40px; text-align: center; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); position: relative; overflow: hidden;">
+                    <div style="position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, #10b981, #059669);"></div>
+                    <h1 style="color: #ffffff; margin: 0 0 12px 0; font-size: 26px; font-weight: 700; letter-spacing: -0.025em;">SUITE ENTRETIEN</h1>
+                    <div style="width: 32px; height: 1px; background: rgba(255,255,255,0.3); margin: 20px auto; border-radius: 1px;"></div>
+                    <p style="color: #e2e8f0; margin: 0; font-size: 13px; font-weight: 500; letter-spacing: 1px; text-transform: uppercase;">Processus en cours</p>
+                </div>
+
+                <!-- Content -->
+                <div style="padding: 56px 48px;">
+                    <p style="font-size: 19px; font-weight: 600; margin: 0 0 36px 0; color: #1a1a1a;">
+                        Bonjour <span style="color: #dc2626;"><t t-out="object.partner_name or 'Madame/Monsieur'">Madame/Monsieur</t></span>,
+                    </p>
+                    
+                    <p style="font-size: 16px; margin: 0 0 32px 0; color: #374151; line-height: 1.7;">
+                        Faisant suite à votre entretien du <strong>[date]</strong>, nous avons le plaisir de vous informer que votre candidature a été retenue pour la prochaine étape du processus de recrutement.
+                    </p>
+                    
+                    <!-- Positive News Card -->
+                    <div style="background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%); border: 1px solid #a7f3d0; border-radius: 16px; padding: 36px; margin: 40px 0; text-align: center;">
+                        <p style="font-size: 18px; margin: 0 0 16px 0; color: #065f46; font-weight: 700;">
+                            ✅ Félicitations !
+                        </p>
+                        <p style="font-size: 16px; margin: 0; color: #047857; font-weight: 600;">
+                            <strong>Un second entretien est prévu.</strong> Vous serez contacté(e) prochainement afin d'en fixer les modalités.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <div style="padding: 40px 48px; background: #f8fafc; border-top: 1px solid #e2e8f0;">
+                    <div style="text-align: center;">
+                        <p style="margin: 0 0 8px 0; font-size: 16px; font-weight: 700; color: #1a1a1a;">MOUNSIF Amina</p>
+                        <p style="margin: 0 0 16px 0; font-size: 14px; color: #64748b; font-style: italic;">Chargée de recrutement</p>
+                        <p style="margin: 0; font-size: 16px; font-weight: 700; color: #dc2626;">RHS EMPLOI</p>
+                    </div>
+                </div>
+            </div>
+        </field>
+        <field name="auto_delete" eval="True"/>
+        <field name="lang">{{ object.partner_id.lang or '' }}</field>
+    </record>
+
+    <!-- 7. Mise en vivier -->
+    <record id="mail_template_talent_pool" model="mail.template">
+        <field name="name">RHS EMPLOI - Mise en vivier de talents</field>
+        <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
+        <field name="subject">Votre candidature — Enregistrement dans notre vivier</field>
+        <field name="email_to">{{ (not object.partner_id and object.email_from or '') }}</field>
+        <field name="partner_to">{{ object.partner_id.id or '' }}</field>
+        <field name="description">Email pour mise en vivier de talents</field>
+        <field name="body_html" type="html">
+            <div style="max-width: 580px; margin: 0 auto; background: #ffffff; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', system-ui, sans-serif; line-height: 1.65; color: #1a1a1a;">
+                
+                <!-- Header -->
+                <div style="padding: 56px 48px 40px; text-align: center; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); position: relative; overflow: hidden;">
+                    <div style="position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, #f59e0b, #d97706);"></div>
+                    <h1 style="color: #ffffff; margin: 0 0 12px 0; font-size: 26px; font-weight: 700; letter-spacing: -0.025em;">VIVIER TALENTS</h1>
+                    <div style="width: 32px; height: 1px; background: rgba(255,255,255,0.3); margin: 20px auto; border-radius: 1px;"></div>
+                    <p style="color: #e2e8f0; margin: 0; font-size: 13px; font-weight: 500; letter-spacing: 1px; text-transform: uppercase;">Profil conservé</p>
+                </div>
+
+                <!-- Content -->
+                <div style="padding: 56px 48px;">
+                    <p style="font-size: 19px; font-weight: 600; margin: 0 0 36px 0; color: #1a1a1a;">
+                        Bonjour <strong style="color: #dc2626;"><t t-out="object.partner_name or 'Madame/Monsieur'">Madame/Monsieur</t></strong>,
+                    </p>
+                    
+                    <p style="font-size: 16px; margin: 0 0 32px 0; color: #374151; line-height: 1.7;">
+                        Bien que votre candidature n'ait pas été retenue pour le poste de 
+                        <strong style="color: #1a1a1a; background: #f8fafc; padding: 2px 6px; border-radius: 4px;"><t t-out="object.job_id.name or ''">Nom du poste</t></strong>, votre profil présente des atouts que nous avons particulièrement appréciés.
+                    </p>
+                    
+                    <!-- Talent Pool Card -->
+                    <div style="background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%); border: 1px solid #fed7aa; border-radius: 16px; padding: 36px; margin: 40px 0; text-align: center;">
+                        <p style="font-size: 18px; margin: 0 0 16px 0; color: #92400e; font-weight: 700;">
+                            🌟 Votre profil a été conservé
+                        </p>
+                        <p style="font-size: 16px; margin: 0; color: #a16207; font-weight: 500; line-height: 1.6;">
+                            Nous conservons votre dossier dans notre vivier de talents afin de pouvoir vous recontacter dans le cadre de futures opportunités.
+                        </p>
+                    </div>
+                    
+                    <p style="font-size: 16px; margin: 32px 0 0 0; color: #374151; line-height: 1.7;">
+                        Nous vous remercions pour l'intérêt porté à RHS Emploi et vous souhaitons une pleine réussite dans vos projets professionnels.
+                    </p>
+                </div>
+
+                <!-- Footer -->
+                <div style="padding: 40px 48px; background: #f8fafc; border-top: 1px solid #e2e8f0;">
+                    <div style="text-align: center;">
+                        <p style="margin: 0 0 8px 0; font-size: 16px; font-weight: 700; color: #1a1a1a;">MOUNSIF Amina</p>
+                        <p style="margin: 0 0 16px 0; font-size: 14px; color: #64748b; font-style: italic;">Chargée de recrutement</p>
+                        <p style="margin: 0; font-size: 16px; font-weight: 700; color: #dc2626;">RHS EMPLOI</p>
+                    </div>
+                </div>
+            </div>
+        </field>
+        <field name="auto_delete" eval="True"/>
+        <field name="lang">{{ object.partner_id.lang or '' }}</field>
+    </record>
+
+    <!-- 8. Proposition d'embauche officielle -->
+    <record id="mail_template_job_offer" model="mail.template">
+        <field name="name">RHS EMPLOI - Proposition d'embauche officielle</field>
+        <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
+        <field name="subject">Confirmation d'embauche et documents à fournir</field>
+        <field name="email_to">{{ (not object.partner_id and object.email_from or '') }}</field>
+        <field name="partner_to">{{ object.partner_id.id or '' }}</field>
+        <field name="description">Email de proposition officielle d'embauche</field>
+        <field name="body_html" type="html">
+            <div style="max-width: 580px; margin: 0 auto; background: #ffffff; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', system-ui, sans-serif; line-height: 1.65; color: #1a1a1a;">
+                
+                <!-- Header -->
+                <div style="padding: 56px 48px 40px; text-align: center; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); position: relative; overflow: hidden;">
+                    <div style="position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, #10b981, #059669);"></div>
+                    <h1 style="color: #ffffff; margin: 0 0 12px 0; font-size: 26px; font-weight: 700; letter-spacing: -0.025em;">OFFRE D'EMPLOI</h1>
+                    <div style="width: 32px; height: 1px; background: rgba(255,255,255,0.3); margin: 20px auto; border-radius: 1px;"></div>
+                    <p style="color: #e2e8f0; margin: 0; font-size: 13px; font-weight: 500; letter-spacing: 1px; text-transform: uppercase;">Confirmation d'embauche</p>
+                </div>
+
+                <!-- Content -->
+                <div style="padding: 56px 48px;">
+                    <p style="font-size: 19px; font-weight: 600; margin: 0 0 36px 0; color: #1a1a1a;">
+                        Bonjour <strong style="color: #dc2626;"><t t-out="object.partner_name or 'Madame/Monsieur'">Madame/Monsieur</t></strong>,
+                    </p>
+                    
+                    <p style="font-size: 16px; margin: 0 0 40px 0; color: #374151; line-height: 1.7;">
+                        Nous avons le plaisir de vous informer que vous avez été retenu(e) pour le poste de 
+                        <strong style="color: #1a1a1a; background: #f8fafc; padding: 2px 6px; border-radius: 4px;"><t t-out="object.job_id.name or ''">Nom du poste</t></strong> au sein de <strong>RHS EMPLOI</strong>.
+                    </p>
+                    
+                    <!-- Job Details -->
+                    <div style="background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%); border: 1px solid #a7f3d0; border-radius: 20px; padding: 36px; margin: 40px 0;">
+                        <h3 style="margin: 0 0 28px 0; font-size: 18px; font-weight: 700; color: #065f46; text-align: center;">
+                            Détails de l'offre
+                        </h3>
+                        
+                        <div style="display: flex; flex-direction: column; gap: 20px;">
+                            <div style="display: flex; align-items: center; justify-content: space-between; padding: 16px 0; border-bottom: 1px solid #bbf7d0;">
+                                <span style="color: #065f46; font-size: 16px; font-weight: 700;">• Rémunération</span>
+                                <span style="color: #047857; font-size: 16px; font-weight: 700;">[Montant]</span>
+                            </div>
+                            <div style="display: flex; align-items: center; justify-content: space-between; padding: 16px 0;">
+                                <span style="color: #065f46; font-size: 16px; font-weight: 700;">• Prise de poste</span>
+                                <span style="color: #047857; font-size: 16px; font-weight: 700;">[Date de début]</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p style="font-size: 16px; margin: 40px 0 32px 0; color: #374151; line-height: 1.7;">
+                        Afin de finaliser votre dossier administratif, merci de bien vouloir transmettre les pièces suivantes avant votre prise de poste :
+                    </p>
+
+                    <!-- Documents Required -->
+                    <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 20px; padding: 40px; margin: 32px 0; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);">
+                        <h4 style="margin: 0 0 28px 0; font-size: 17px; font-weight: 700; color: #1a1a1a; text-align: center;">
+                            Documents requis
+                        </h4>
+                        
+                        <div style="display: grid; gap: 16px;">
+                            <div style="display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid #f1f5f9;">
+                                <div style="width: 8px; height: 8px; background: #dc2626; border-radius: 50%; margin-right: 16px; flex-shrink: 0;"></div>
+                                <span style="color: #374151; font-size: 15px; font-weight: 500;">2 copies CIN légalisés</span>
+                            </div>
+                            <div style="display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid #f1f5f9;">
+                                <div style="width: 8px; height: 8px; background: #dc2626; border-radius: 50%; margin-right: 16px; flex-shrink: 0;"></div>
+                                <span style="color: #374151; font-size: 15px; font-weight: 500;">RIB bancaire</span>
+                            </div>
+                            <div style="display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid #f1f5f9;">
+                                <div style="width: 8px; height: 8px; background: #dc2626; border-radius: 50%; margin-right: 16px; flex-shrink: 0;"></div>
+                                <span style="color: #374151; font-size: 15px; font-weight: 500;">CV</span>
+                            </div>
+                            <div style="display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid #f1f5f9;">
+                                <div style="width: 8px; height: 8px; background: #dc2626; border-radius: 50%; margin-right: 16px; flex-shrink: 0;"></div>
+                                <span style="color: #374151; font-size: 15px; font-weight: 500;">Affiliation à la CNSS</span>
+                            </div>
+                            <div style="display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid #f1f5f9;">
+                                <div style="width: 8px; height: 8px; background: #dc2626; border-radius: 50%; margin-right: 16px; flex-shrink: 0;"></div>
+                                <span style="color: #374151; font-size: 15px; font-weight: 500;">Copie des diplômes et/ou certificats</span>
+                            </div>
+                            <div style="display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid #f1f5f9;">
+                                <div style="width: 8px; height: 8px; background: #dc2626; border-radius: 50%; margin-right: 16px; flex-shrink: 0;"></div>
+                                <span style="color: #374151; font-size: 15px; font-weight: 500;">Attestations de stage et/ou de travail</span>
+                            </div>
+                            <div style="display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid #f1f5f9;">
+                                <div style="width: 8px; height: 8px; background: #dc2626; border-radius: 50%; margin-right: 16px; flex-shrink: 0;"></div>
+                                <span style="color: #374151; font-size: 15px; font-weight: 500;">4 Photos d'identité récente</span>
+                            </div>
+                            <div style="display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid #f1f5f9;">
+                                <div style="width: 8px; height: 8px; background: #dc2626; border-radius: 50%; margin-right: 16px; flex-shrink: 0;"></div>
+                                <span style="color: #374151; font-size: 15px; font-weight: 500;">Fiche anthropométrique</span>
+                            </div>
+                            <div style="display: flex; align-items: center; padding: 12px 0;">
+                                <div style="width: 8px; height: 8px; background: #dc2626; border-radius: 50%; margin-right: 16px; flex-shrink: 0;"></div>
+                                <span style="color: #374151; font-size: 15px; font-weight: 500;">Fiche d'aptitude / pulmonaire</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <div style="padding: 40px 48px; background: #f8fafc; border-top: 1px solid #e2e8f0;">
+                    <div style="text-align: center;">
+                        <p style="margin: 0 0 8px 0; font-size: 16px; font-weight: 700; color: #1a1a1a;">MOUNSIF Amina</p>
+                        <p style="margin: 0 0 16px 0; font-size: 14px; color: #64748b; font-style: italic;">Chargée de recrutement</p>
+                        <p style="margin: 0; font-size: 16px; font-weight: 700; color: #dc2626;">RHS EMPLOI</p>
+                    </div>
+                </div>
+            </div>
+        </field>
+        <field name="auto_delete" eval="True"/>
+        <field name="lang">{{ object.partner_id.lang or '' }}</field>
+    </record>
+
+    <!-- DYNAMIC EMAIL DE CONFIRMATION D'EMBAUCHE (with conditional documents) -->
+    <record id="mail_template_contract_confirmation" model="mail.template">
+        <field name="name">RHS EMPLOI - Email de confirmation d'embauche (dynamique)</field>
+        <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
+        <field name="subject">Confirmation d'embauche — Documents requis pour {{ object.job_id.name }}</field>
+        <field name="email_to">{{ (not object.partner_id and object.email_from or '') }}</field>
+        <field name="partner_to">{{ object.partner_id.id or '' }}</field>
+        <field name="description">Email de confirmation de contrat avec liste dynamique de documents selon les champs du job</field>
+        <field name="body_html" type="html">
+            <div style="max-width: 580px; margin: 0 auto; background: #ffffff; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', system-ui, sans-serif; line-height: 1.65; color: #1a1a1a;">
+                
+                <!-- Header -->
+                <div style="padding: 56px 48px 40px; text-align: center; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); position: relative; overflow: hidden;">
+                    <div style="position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, #10b981, #059669);"></div>
+                    <h1 style="color: #ffffff; margin: 0 0 12px 0; font-size: 26px; font-weight: 700; letter-spacing: -0.025em;">BIENVENUE</h1>
+                    <div style="width: 32px; height: 1px; background: rgba(255,255,255,0.3); margin: 20px auto; border-radius: 1px;"></div>
+                    <p style="color: #e2e8f0; margin: 0; font-size: 13px; font-weight: 500; letter-spacing: 1px; text-transform: uppercase;">Confirmation d'embauche</p>
+                </div>
+
+                <!-- Content -->
+                <div style="padding: 56px 48px;">
+                    <p style="font-size: 19px; font-weight: 600; margin: 0 0 36px 0; color: #1a1a1a;">
+                        Bonjour <strong style="color: #dc2626;"><t t-out="object.partner_name or 'Madame/Monsieur'">Madame/Monsieur</t></strong>,
+                    </p>
+                    
+                    <p style="font-size: 16px; margin: 0 0 32px 0; color: #374151; line-height: 1.7;">
+                        Suite à la validation de votre contrat de 
+                        <strong style="color: #1a1a1a; background: #f8fafc; padding: 2px 6px; border-radius: 4px;">
+                            <t t-if="object.job_id.type_contrat == 'interim'">travail temporaire</t>
+                            <t t-elif="object.job_id.type_contrat == 'cdd'">travail à durée déterminée (CDD)</t>
+                            <t t-elif="object.job_id.type_contrat == 'cdi'">travail à durée indéterminée (CDI)</t>
+                            <t t-elif="object.job_id.type_contrat == 'stage'">stage</t>
+                            <t t-else="">travail</t>
+                        </strong>
+                        pour le poste de <strong style="color: #1a1a1a; background: #f8fafc; padding: 2px 6px; border-radius: 4px;"><t t-out="object.job_id.name or ''">Nom du poste</t></strong>, merci de bien vouloir nous fournir les documents suivants :
+                    </p>
+
+                    <!-- Dynamic Documents Section -->
+                    <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 20px; padding: 40px; margin: 40px 0; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);">
+                        <h3 style="margin: 0 0 32px 0; font-size: 18px; font-weight: 700; color: #1a1a1a; text-align: center;">
+                            Documents requis
+                        </h3>
+                        
+                        <div style="display: grid; gap: 16px;">
+                            <t t-if="object.job_id.copy_cin">
+                                <div style="display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid #f1f5f9;">
+                                    <div style="width: 8px; height: 8px; background: #dc2626; border-radius: 50%; margin-right: 16px; flex-shrink: 0;"></div>
+                                    <span style="color: #374151; font-size: 15px; font-weight: 500;">2 copies CIN légalisées</span>
+                                </div>
+                            </t>
+                            <t t-if="object.job_id.doc_rib">
+                                <div style="display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid #f1f5f9;">
+                                    <div style="width: 8px; height: 8px; background: #dc2626; border-radius: 50%; margin-right: 16px; flex-shrink: 0;"></div>
+                                    <span style="color: #374151; font-size: 15px; font-weight: 500;">RIB</span>
+                                </div>
+                            </t>
+                            <t t-if="object.job_id.doc_cv">
+                                <div style="display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid #f1f5f9;">
+                                    <div style="width: 8px; height: 8px; background: #dc2626; border-radius: 50%; margin-right: 16px; flex-shrink: 0;"></div>
+                                    <span style="color: #374151; font-size: 15px; font-weight: 500;">CV actualisé</span>
+                                </div>
+                            </t>
+                            <t t-if="object.job_id.doc_cnss">
+                                <div style="display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid #f1f5f9;">
+                                    <div style="width: 8px; height: 8px; background: #dc2626; border-radius: 50%; margin-right: 16px; flex-shrink: 0;"></div>
+                                    <span style="color: #374151; font-size: 15px; font-weight: 500;">Attestation d'affiliation à la CNSS</span>
+                                </div>
+                            </t>
+                            <t t-if="object.job_id.doc_diplomes">
+                                <div style="display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid #f1f5f9;">
+                                    <div style="width: 8px; height: 8px; background: #dc2626; border-radius: 50%; margin-right: 16px; flex-shrink: 0;"></div>
+                                    <span style="color: #374151; font-size: 15px; font-weight: 500;">Copie des diplômes et/ou certificats</span>
+                                </div>
+                            </t>
+                            <t t-if="object.job_id.doc_attestations">
+                                <div style="display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid #f1f5f9;">
+                                    <div style="width: 8px; height: 8px; background: #dc2626; border-radius: 50%; margin-right: 16px; flex-shrink: 0;"></div>
+                                    <span style="color: #374151; font-size: 15px; font-weight: 500;">Attestations de stage et/ou de travail</span>
+                                </div>
+                            </t>
+                            <t t-if="object.job_id.doc_photos">
+                                <div style="display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid #f1f5f9;">
+                                    <div style="width: 8px; height: 8px; background: #dc2626; border-radius: 50%; margin-right: 16px; flex-shrink: 0;"></div>
+                                    <span style="color: #374151; font-size: 15px; font-weight: 500;">Photo d'identité récente</span>
+                                </div>
+                            </t>
+                            <t t-if="object.job_id.doc_anthropometrique">
+                                <div style="display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid #f1f5f9;">
+                                    <div style="width: 8px; height: 8px; background: #dc2626; border-radius: 50%; margin-right: 16px; flex-shrink: 0;"></div>
+                                    <span style="color: #374151; font-size: 15px; font-weight: 500;">Fiche anthropométrique</span>
+                                </div>
+                            </t>
+                            <t t-if="object.job_id.doc_aptitude">
+                                <div style="display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid #f1f5f9;">
+                                    <div style="width: 8px; height: 8px; background: #dc2626; border-radius: 50%; margin-right: 16px; flex-shrink: 0;"></div>
+                                    <span style="color: #374151; font-size: 15px; font-weight: 500;">Fiche d'aptitude médicale</span>
+                                </div>
+                            </t>
+                            <t t-if="object.job_id.doc_radiologie">
+                                <div style="display: flex; align-items: center; padding: 12px 0;">
+                                    <div style="width: 8px; height: 8px; background: #dc2626; border-radius: 50%; margin-right: 16px; flex-shrink: 0;"></div>
+                                    <span style="color: #374151; font-size: 15px; font-weight: 500;">Fiche pulmonaire</span>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+
+                    <!-- Important Notice -->
+                    <div style="background: #fff8f0; border: 1px solid #fed7aa; border-radius: 16px; padding: 28px; margin: 32px 0;">
+                        <p style="margin: 0; font-size: 15px; color: #9a3412; font-weight: 500;">
+                            <strong>Important :</strong> Veuillez nous transmettre ces documents avant votre prise de poste prévue le <strong>[Date de début à compléter]</strong>.
+                        </p>
+                    </div>
+                    
+                    <!-- Office Address -->
+                    <div style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border: 1px solid #e2e8f0; border-radius: 16px; padding: 32px; margin: 40px 0; text-align: center;">
+                        <h4 style="margin: 0 0 20px 0; font-size: 16px; font-weight: 700; color: #1a1a1a;">
+                            Nos bureaux
+                        </h4>
+                        <div style="color: #374151; font-size: 15px; line-height: 1.6;">
+                            <p style="margin: 0 0 4px 0; font-weight: 700; color: #1a1a1a;">RHS EMPLOI</p>
+                            <p style="margin: 0 0 4px 0;">137, Boulevard Mly Ismail N° 31-3<sup>ème</sup> étage</p>
+                            <p style="margin: 0;">Roches Noires - Casablanca</p>
+                        </div>
+                        <p style="color: #64748b; font-size: 14px; margin: 16px 0 0 0;">
+                            Vous pouvez nous envoyer les documents par email à cette adresse ou les apporter directement à nos bureaux.
+                        </p>
+                    </div>
+                    
+                    <!-- Welcome Message -->
+                    <div style="text-align: center; margin: 40px 0 32px 0; padding: 32px; background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border-radius: 16px;">
+                        <p style="margin: 0; font-size: 18px; font-weight: 700; color: #dc2626;">
+                            Nous sommes ravis de vous accueillir dans notre équipe !
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <div style="padding: 40px 48px; background: #f8fafc; border-top: 1px solid #e2e8f0;">
+                    <div style="text-align: center;">
+                        <p style="margin: 0 0 8px 0; font-size: 16px; font-weight: 700; color: #1a1a1a;">MOUNSIF Amina</p>
+                        <p style="margin: 0 0 16px 0; font-size: 14px; color: #64748b; font-style: italic;">Chargée de recrutement</p>
+                        <p style="margin: 0; font-size: 16px; font-weight: 700; color: #dc2626;">RHS EMPLOI</p>
+                    </div>
+                </div>
+            </div>
+        </field>
+        <field name="auto_delete" eval="True"/>
+        <field name="lang">{{ object.partner_id.lang or '' }}</field>
+    </record>
+
+</data>
+</odoo>

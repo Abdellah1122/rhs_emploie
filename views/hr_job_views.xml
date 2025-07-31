@@ -1,0 +1,422 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <!-- 1) Quick-create popup: Enhanced with contract and documents -->
+  <record id="rhs_job_simple_form_inherit" model="ir.ui.view">
+    <field name="name">rhs.job.simple.form.inherit.rhs_emploi</field>
+    <field name="model">hr.job</field>
+    <field name="inherit_id" ref="hr_recruitment.hr_job_simple_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//form/group" position="after">
+        <separator string="Détails complémentaires" style="margin: 20px 0 15px 0;"/>
+        
+        <!-- Main info in clean 2-column layout -->
+        <group col="2" class="mb-3">
+          <field name="request_date" string="Date demande"/>
+          <field name="deadline_date" string="Échéance"/>
+          <field name="status" string="Statut"/>
+          <field name="experience" string="Expérience"/>
+        </group>
+        
+        <!-- Additional details -->
+        <group col="2" class="mb-3">
+          <field name="language" string="Langue"/>
+          <field name="city" string="Ville"/>
+          <field name="activity_domain" string="Domaine d'activité"/>
+          <field name="type_contrat" string="Type de contrat"/>
+        </group>
+
+        <!-- Documents section - only visible for interim -->
+        <group string="Documents requis" invisible="type_contrat != 'interim'" class="mt-3">
+          <separator string="Documents à fournir par le candidat" colspan="2"/>
+          <group col="2">
+            <field name="copy_cin"/>
+            <field name="doc_rib"/>
+            <field name="doc_cv"/>
+            <field name="doc_cnss"/>
+            <field name="doc_diplomes"/>
+            <field name="doc_attestations"/>
+            <field name="doc_photos"/>
+            <field name="doc_anthropometrique"/>
+            <field name="doc_aptitude"/>
+            <field name="doc_radiologie"/>
+          </group>
+        </group>
+      </xpath>
+    </field>
+  </record>
+
+  <!-- 2) Main form: Enhanced with contract and documents in organized sections -->
+  <record id="rhs_job_form_inherit" model="ir.ui.view">
+    <field name="name">rhs.job.form.inherit.rhs_emploi</field>
+    <field name="model">hr.job</field>
+    <field name="inherit_id" ref="hr.view_hr_job_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet/notebook/page[1]" position="inside">
+        <!-- Main RH Information Section -->
+        <group class="o_subsection o_group_col_2 mt-4" string="Informations RH" style="gap: 1rem;">
+          <field name="request_date" widget="date" class="mb-3"/>
+          <field name="deadline_date" widget="date" class="mb-3"/>
+          <field name="status" class="mb-3"/>
+          <field name="experience" class="mb-3"/>
+          <field name="language" class="mb-3"/>
+          <field name="city" class="mb-3"/>
+          <field name="activity_domain" class="mb-3"/>
+          <field name="type_contrat" class="mb-3"/>
+        </group>
+
+        <!-- Contract Details Section -->
+        <group class="o_subsection mt-4" string="Détails du contrat" style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
+          <div class="row">
+            <div class="col-6">
+              <field name="nbr_jours_restants" readonly="1" 
+                     invisible="deadline_date == False"
+                     string="Jours restants"/>
+            </div>
+            <div class="col-6" invisible="type_contrat != 'interim'">
+              <field name="documents_required_interim" readonly="1" 
+                     widget="text" string="Documents requis"/>
+            </div>
+          </div>
+        </group>
+
+        <!-- Documents Requirements Section - Only for Interim -->
+        <group class="o_subsection mt-4" string="Documents requis pour candidature" 
+               invisible="type_contrat != 'interim'"
+               style="background: #fff8dc; padding: 15px; border-radius: 8px; border-left: 4px solid #ffc107;">
+          
+          <div class="alert alert-info" style="margin-bottom: 15px;">
+            <strong>📋 Documents à demander au candidat:</strong>
+            <p class="mb-0">Cochez les documents que le candidat devra fournir lors de son embauche.</p>
+          </div>
+
+          <!-- Personal Documents -->
+          <group string="Documents personnels" col="2">
+            <field name="copy_cin"/>
+            <field name="doc_rib"/>
+            <field name="doc_cv"/>
+            <field name="doc_photos"/>
+          </group>
+
+          <!-- Professional Documents -->
+          <group string="Documents professionnels" col="2">
+            <field name="doc_cnss"/>
+            <field name="doc_diplomes"/>
+            <field name="doc_attestations"/>
+          </group>
+
+          <!-- Medical Documents -->
+          <group string="Documents médicaux" col="2">
+            <field name="doc_anthropometrique"/>
+            <field name="doc_aptitude"/>
+            <field name="doc_radiologie"/>
+          </group>
+        </group>
+      </xpath>
+    </field>
+  </record>
+
+  <!-- 3) Tree/List view: Enhanced with new fields -->
+  <record id="rhs_job_tree_inherit" model="ir.ui.view">
+    <field name="name">rhs.job.tree.inherit.rhs_emploi</field>
+    <field name="model">hr.job</field>
+    <field name="inherit_id" ref="hr.view_hr_job_tree"/>
+    <field name="arch" type="xml">
+      <xpath expr="//tree" position="inside">
+        <field name="request_date" string="Date demande"/>
+        <field name="deadline_date" string="Échéance"/>
+        <field name="nbr_jours_restants" string="Jours restants" 
+               decoration-danger="nbr_jours_restants &lt; 0"
+               decoration-warning="nbr_jours_restants &lt;= 7 and nbr_jours_restants &gt;= 0"
+               decoration-success="nbr_jours_restants &gt; 30"/>
+        <field name="status" string="Statut"/>
+        <field name="type_contrat" string="Type contrat"/>
+        <field name="experience" string="Expérience"/>
+        <field name="language" string="Langue"/>
+        <field name="city" string="Ville"/>
+        <field name="activity_domain" string="Domaine"/>
+      </xpath>
+    </field>
+  </record>
+
+  <!-- 4) Search/Filter view: Enhanced filters -->
+  <record id="rhs_job_search_inherit" model="ir.ui.view">
+    <field name="name">rhs.job.search.inherit.rhs_emploi</field>
+    <field name="model">hr.job</field>
+    <field name="inherit_id" ref="hr.view_job_filter"/>
+    <field name="arch" type="xml">
+      <xpath expr="//search" position="inside">
+        <!-- Additional search fields -->
+        <field name="type_contrat"/>
+        <field name="status"/>
+        <field name="city"/>
+        <field name="activity_domain"/>
+        
+        <!-- Enhanced filters -->
+        <separator/>
+        <filter string="Contrats Intérim" name="filter_interim" 
+                domain="[('type_contrat', '=', 'interim')]"/>
+        <filter string="Postes Urgents" name="filter_urgent" 
+                domain="[('nbr_jours_restants', '&lt;=', 7), ('nbr_jours_restants', '&gt;=', 0)]"/>
+        <filter string="Postes en Retard" name="filter_overdue" 
+                domain="[('nbr_jours_restants', '&lt;', 0)]"/>
+        <filter string="Postes Ouverts" name="filter_open" 
+                domain="[('status', '=', 'ouvert')]"/>
+        
+        <!-- Group by options -->
+        <separator/>
+        <group expand="0" string="Grouper par">
+          <filter string="Type de contrat" name="group_contract_type" 
+                  context="{'group_by': 'type_contrat'}"/>
+          <filter string="Statut" name="group_status" 
+                  context="{'group_by': 'status'}"/>
+          <filter string="Ville" name="group_city" 
+                  context="{'group_by': 'city'}"/>
+          <filter string="Domaine d'activité" name="group_domain" 
+                  context="{'group_by': 'activity_domain'}"/>
+        </group>
+      </xpath>
+    </field>
+  </record>
+
+  <!-- 5) Enhanced form view for documents management -->
+  <record id="rhs_job_documents_form" model="ir.ui.view">
+    <field name="name">rhs.job.documents.form.rhs_emploi</field>
+    <field name="model">hr.job</field>
+    <field name="inherit_id" ref="hr.view_hr_job_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//sheet/notebook" position="inside">
+        <!-- New Documents Tab -->
+        <page string="Documents &amp; Contrat" name="documents_contract">
+          <group>
+            <!-- Contract Information -->
+            <group string="Informations Contrat" col="2">
+              <field name="type_contrat" widget="selection" 
+                     options="{'no_create': True, 'no_edit': True}"/>
+              <field name="nbr_jours_restants" readonly="1" 
+                     invisible="deadline_date == False"/>
+            </group>
+
+            <!-- Documents Checklist for Interim -->
+            <group string="Liste des documents requis" 
+                   invisible="type_contrat != 'interim'">
+              
+              <div class="alert alert-warning" style="margin: 10px 0;">
+                <h5>📋 Documents de candidature (Intérim)</h5>
+                <p>Sélectionnez les documents que le candidat devra obligatoirement fournir :</p>
+              </div>
+
+              <!-- Organized document sections -->
+              <notebook>
+                <page string="Documents Identité" name="identity_docs">
+                  <group col="1">
+                    <field name="copy_cin" string="✓ 2 copies CIN légalisées"/>
+                    <field name="doc_photos" string="✓ 4 Photos d'identité récentes"/>
+                    <field name="doc_cv" string="✓ Curriculum Vitae"/>
+                  </group>
+                </page>
+
+                <page string="Documents Professionnels" name="professional_docs">
+                  <group col="1">
+                    <field name="doc_cnss" string="✓ Attestation d'affiliation à la CNSS"/>
+                    <field name="doc_diplomes" string="✓ Copies des diplômes et/ou certificats"/>
+                    <field name="doc_attestations" string="✓ Attestations de stage et/ou de travail"/>
+                    <field name="doc_rib" string="✓ RIB bancaire"/>
+                  </group>
+                </page>
+
+                <page string="Documents Médicaux" name="medical_docs">
+                  <group col="1">
+                    <field name="doc_anthropometrique" string="✓ Fiche anthropométrique"/>
+                    <field name="doc_aptitude" string="✓ Fiche d'aptitude médicale"/>
+                    <field name="doc_radiologie" string="✓ Radiologie pulmonaire"/>
+                  </group>
+                </page>
+              </notebook>
+
+              <!-- Summary -->
+              <group string="Récapitulatif">
+                <field name="documents_required_interim" readonly="1" 
+                       widget="text" nolabel="1" 
+                       style="background: #f8f9fa; padding: 10px; border-radius: 5px;"/>
+              </group>
+            </group>
+          </group>
+        </page>
+      </xpath>
+    </field>
+  </record>
+
+  <!-- 6) Client Sidebar: Show DEPARTMENTS but label as CLIENTS -->
+  <record id="hr_job_search_with_client_panel" model="ir.ui.view">
+    <field name="name">hr.job.search.client.panel</field>
+    <field name="model">hr.job</field>
+    <field name="inherit_id" ref="hr.view_job_filter"/>
+    <field name="arch" type="xml">
+      <xpath expr="//searchpanel" position="replace">
+        <searchpanel>
+          <field name="department_id" string="CLIENTS" icon="fa-building"/>
+        </searchpanel>
+      </xpath>
+    </field>
+  </record>
+
+  <!-- 7) Enhanced Kanban: Modern minimalist design with red accents -->
+  <record id="rhs_job_kanban_with_status" model="ir.ui.view">
+    <field name="name">hr.job.kanban.with.status.rhs_emploi</field>
+    <field name="model">hr.job</field>
+    <field name="inherit_id" ref="hr_recruitment.view_hr_job_kanban"/>
+    <field name="arch" type="xml">
+
+      <!-- load our new fields -->
+      <xpath expr="//kanban" position="inside">
+        <field name="request_date"/>
+        <field name="deadline_date"/>
+        <field name="status"/>
+        <field name="experience"/>
+        <field name="language"/>
+        <field name="city"/>
+        <field name="activity_domain"/>
+        <field name="nbr_jours_restants"/>
+        <field name="type_contrat"/>
+      </xpath>
+
+      <!-- Replace the entire kanban card template for ultra-clean design -->
+<xpath expr="//t[@t-name='kanban-box']" position="replace">
+  <t t-name="kanban-box">
+    <div class="oe_kanban_card o_kanban_record_has_image_fill modern-card"
+         style="background: #FAF7F3;
+                border-radius: 20px;
+                border: none;
+                box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+                transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+                overflow: hidden;
+                position: relative;
+                margin: 12px;
+                min-height: 160px;">
+
+      <!-- Minimalist red accent line -->
+      <div style="position: absolute;
+                  top: 0;
+                  left: 20px;
+                  right: 20px;
+                  height: 2px;
+                  background: #dc2626;
+                  z-index: 1;
+                  border-radius: 2px;"></div>
+
+      <!-- Pure content -->
+      <div style="position: relative; z-index: 2; padding: 28px 24px 24px;">
+
+        <!-- Minimal header with more spacing -->
+        <div class="d-flex justify-content-between align-items-start mb-8">
+          <h5 class="o_kanban_record_title mb-0"
+              style="color: #111827;
+                     font-weight: 500;
+                     font-size: 1.05rem;
+                     line-height: 1.5;
+                     letter-spacing: -0.025em;
+                     max-width: 65%;">
+            <field name="name"/>
+          </h5>
+          <t t-set="status_value" t-value="record.status and record.status.raw_value or ''"/>
+          <span t-attf-class="status-text #{status_value == 'ouvert' ? 'text-green' : status_value == 'en_cours' ? 'text-orange' : status_value == 'cloture' ? 'text-gray' : status_value == 'annule' ? 'text-red' : 'text-blue'}"
+               style="font-size: 0.75rem;
+                      font-weight: 500;
+                      text-transform: lowercase;
+                      letter-spacing: 0.3px;
+                      margin-top: 4px;
+                      padding:0.5em 1em;
+                      border-radius:1em;
+                      background-color:#FFF2E0">
+            <t t-esc="record.status and record.status.value or 'N/A'"/>
+          </span>
+        </div>
+
+        <!-- Ultra-clean info grid with more spacing -->
+        <div class="info-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 28px 32px;margin-top:2em; margin-bottom: 32px;">
+          <div class="info-pair">
+            <div style="color: #6b7280; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px;">Date de demande</div>
+            <div style="color: #111827; font-size: 0.95rem; font-weight: 600;">
+              <t t-esc="record.request_date and record.request_date.value or '-'"/>
+            </div>
+          </div>
+          
+          <div class="info-pair highlighted-deadline">
+            <div style="color: #dc2626; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px;">Date d'échéance</div>
+            <div style="color: #dc2626; font-size: 1.05rem; font-weight: 700; background: rgba(220, 38, 38, 0.08); padding: 4px 8px; border-radius: 6px; display: inline-block;">
+              <t t-esc="record.deadline_date and record.deadline_date.value or '-'"/>
+            </div>
+          </div>
+          
+          <div class="info-pair">
+            <div style="color: #6b7280; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px;">EXPÉRIENCE</div>
+            <div style="color: #111827; font-size: 0.95rem; font-weight: 600;">
+              <t t-esc="record.experience and record.experience.value or '-'"/>
+            </div>
+          </div>
+          
+          <div class="info-pair">
+            <div style="color: #6b7280; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px;">LIEU</div>
+            <div style="color: #111827; font-size: 0.95rem; font-weight: 600;">
+              <t t-esc="record.city and record.city.value or '-'"/>
+            </div>
+          </div>
+        </div>
+
+        <!-- Enhanced bottom metrics -->
+        <div class="d-flex justify-content-between align-items-center">
+          <div style="color: #111827; font-size: 0.95rem; font-weight: 600; background: rgba(17, 24, 39, 0.05); padding: 6px 12px; border-radius: 8px;">
+            <t t-set="app_count" t-value="record.application_count and record.application_count.value or 0"/>
+            <span style="color: #6b7280; font-size: 0.85rem; margin-right: 4px;">📋</span>
+            <t t-esc="app_count"/> candidats
+          </div>
+
+          <div t-if="record.nbr_jours_restants and record.nbr_jours_restants.raw_value != undefined">
+            <t t-set="days_remaining" t-value="record.nbr_jours_restants.raw_value"/>
+            <span t-attf-style="color: #{days_remaining &lt; 7 ? '#dc2626' : days_remaining &lt; 30 ? '#f59e0b' : '#059669'};
+                                font-size: 0.95rem;
+                                font-weight: 700;
+                                background: #{days_remaining &lt; 7 ? 'rgba(220, 38, 38, 0.1)' : days_remaining &lt; 30 ? 'rgba(245, 158, 11, 0.1)' : 'rgba(5, 150, 105, 0.1)'};
+                                padding: 6px 12px;
+                                border-radius: 8px;">
+              ⏰ <t t-esc="record.nbr_jours_restants.value"/>j
+            </span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Refined styling -->
+      <style>
+        .modern-card:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 8px 25px rgba(0,0,0,0.08) !important;
+        }
+
+        .text-green { color: #059669; }
+        .text-orange { color: #f59e0b; }
+        .text-gray { color: #6b7280; }
+        .text-red { color: #dc2626; }
+        .text-blue { color: #3b82f6; }
+
+        .info-grid {
+          opacity: 0.9;
+        }
+
+        .highlighted-deadline {
+          animation: subtle-pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes subtle-pulse {
+          0%, 100% { transform: scale(1); }
+          50% { transform: scale(1.02); }
+        }
+      </style>
+
+    </div>
+  </t>
+</xpath>
+
+    </field>
+  </record>
+</odoo>
